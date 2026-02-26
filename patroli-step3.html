@@ -182,18 +182,63 @@
                     </div>
                 </div>
 
-                <!-- Status -->
-                <div class="flex flex-col gap-2 focus-within:text-primary transition-colors">
-                    <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Status</label>
-                    <div class="relative">
-                        <select id="status"
-                            class="w-full h-14 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-xl px-4 appearance-none focus:border-primary focus:ring-0 transition-all outline-none text-slate-900 dark:text-slate-100 font-medium">
-                            <option value="open">Open</option>
-                            <option value="progress">In Progress</option>
-                            <option value="closed">Closed / Selesai</option>
-                        </select>
-                        <span
-                            class="material-symbols-outlined absolute right-4 top-4 text-slate-400 pointer-events-none">expand_more</span>
+                <!-- Status Selector (Custom Aesthetic) -->
+                <div class="flex flex-col gap-3 focus-within:text-primary transition-colors mt-2">
+                    <label class="text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1">Status Laporan</label>
+                    <input type="hidden" id="status" value="open">
+                    <div class="grid grid-cols-1 gap-3" id="statusContainer">
+                        <!-- Open -->
+                        <button type="button" onclick="setStatus('open')" id="btn-open"
+                            class="status-option flex items-center justify-between p-4 rounded-2xl border-2 transition-all bg-emerald-50/50 border-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.1)]">
+                            <div class="flex items-center gap-3">
+                                <div
+                                    class="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-600 shadow-inner">
+                                    <span class="material-symbols-outlined text-xl">radio_button_checked</span>
+                                </div>
+                                <div class="text-left">
+                                    <p class="text-[11px] font-black uppercase tracking-widest text-emerald-700">Open
+                                    </p>
+                                    <p class="text-[9px] font-bold text-emerald-600/70">Temuan Baru / Belum Selesai</p>
+                                </div>
+                            </div>
+                            <span class="material-symbols-outlined text-emerald-500 animate-pulse">check_circle</span>
+                        </button>
+
+                        <!-- In Progress -->
+                        <button type="button" onclick="setStatus('progress')" id="btn-progress"
+                            class="status-option flex items-center justify-between p-4 rounded-2xl border-2 transition-all bg-white dark:bg-slate-800 border-slate-100 dark:border-slate-700 opacity-60">
+                            <div class="flex items-center gap-3">
+                                <div
+                                    class="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600">
+                                    <span class="material-symbols-outlined text-xl">settings_backup_restore</span>
+                                </div>
+                                <div class="text-left">
+                                    <p
+                                        class="text-[11px] font-black uppercase tracking-widest text-slate-700 dark:text-slate-300">
+                                        In Progress</p>
+                                    <p class="text-[9px] font-bold text-slate-400">Sedang Dalam Perbaikan</p>
+                                </div>
+                            </div>
+                            <span class="material-symbols-outlined text-slate-200 hidden">check_circle</span>
+                        </button>
+
+                        <!-- Closed -->
+                        <button type="button" onclick="setStatus('closed')" id="btn-closed"
+                            class="status-option flex items-center justify-between p-4 rounded-2xl border-2 transition-all bg-white dark:bg-slate-800 border-slate-100 dark:border-slate-700 opacity-60">
+                            <div class="flex items-center gap-3">
+                                <div
+                                    class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
+                                    <span class="material-symbols-outlined text-xl">verified</span>
+                                </div>
+                                <div class="text-left">
+                                    <p
+                                        class="text-[11px] font-black uppercase tracking-widest text-slate-700 dark:text-slate-300">
+                                        Closed / Selesai</p>
+                                    <p class="text-[9px] font-bold text-slate-400">Pekerjaan Rampung / OK</p>
+                                </div>
+                            </div>
+                            <span class="material-symbols-outlined text-slate-200 hidden">check_circle</span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -206,13 +251,14 @@
             <div class="w-full max-w-md flex flex-col items-center gap-3">
                 <div class="w-full flex items-center justify-between gap-4">
                     <button onclick="history.back()"
-                        class="flex-1 h-12 rounded-2xl border-2 border-primary text-primary font-black hover:bg-primary/5 transition-all active:scale-95 uppercase text-[10px] tracking-widest">
-                        Kembali
+                        class="flex-1 h-[72px] rounded-2xl border-2 border-primary text-primary font-bold hover:bg-primary/5 transition-all active:scale-95 uppercase text-xs tracking-widest flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined text-xl">arrow_back</span>
+                        <span>Kembali</span>
                     </button>
                     <button id="btnSubmit" onclick="submitReport()"
-                        class="flex-1 h-12 rounded-2xl bg-primary text-white font-black shadow-lg shadow-primary/30 hover:bg-primary/90 transition-all active:scale-95 uppercase text-[10px] tracking-widest flex items-center justify-center gap-2">
+                        class="flex-1 h-[72px] rounded-2xl bg-primary text-white font-bold shadow-lg shadow-primary/30 hover:bg-primary/90 transition-all active:scale-95 uppercase text-xs tracking-widest flex items-center justify-center gap-3">
                         <span>Kirim</span>
-                        <span class="material-symbols-outlined text-sm">send</span>
+                        <span class="material-symbols-outlined text-xl">send</span>
                     </button>
                 </div>
                 <p class="text-[9px] text-slate-400 uppercase font-black tracking-[0.2em] opacity-50">Finalisasi & Kirim
@@ -232,19 +278,20 @@
             </div>
             <h3 class="text-xl font-bold mb-2">Laporan Dikirim!</h3>
             <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">Data patroli berhasil disimpan ke sistem.</p>
-            <div class="flex flex-col w-full gap-2">
+            <div class="flex flex-col w-full gap-3">
                 <button onclick="window.location.href='preview.html'"
-                    class="w-full h-12 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/30 uppercase text-[10px] tracking-widest flex items-center justify-center gap-2">
-                    <span class="material-symbols-outlined text-sm">visibility</span>
+                    class="w-full h-[72px] bg-primary text-white font-bold rounded-2xl shadow-lg shadow-primary/20 uppercase text-xs tracking-widest flex items-center justify-center gap-2 transition-all active:scale-95">
+                    <span class="material-symbols-outlined text-xl">visibility</span>
                     Preview PDF
                 </button>
                 <button onclick="window.location.href='reports.html'"
-                    class="w-full h-12 bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-300 font-bold rounded-xl border border-blue-200 dark:border-blue-800 uppercase text-[10px] tracking-widest flex items-center justify-center gap-2">
-                    <span class="material-symbols-outlined text-sm">list_alt</span>
+                    class="w-full h-[72px] bg-primary/10 text-primary font-bold rounded-2xl border-2 border-primary/20 uppercase text-xs tracking-widest flex items-center justify-center gap-2 transition-all active:scale-95">
+                    <span class="material-symbols-outlined text-xl">list_alt</span>
                     History
                 </button>
                 <button onclick="window.location.href='patroli-step1.html'"
-                    class="w-full h-12 bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-bold rounded-xl uppercase text-[10px] tracking-widest">
+                    class="w-full h-[72px] bg-primary text-white font-bold rounded-2xl shadow-lg shadow-primary/20 uppercase text-xs tracking-widest flex items-center justify-center gap-2 transition-all active:scale-95">
+                    <span class="material-symbols-outlined text-xl">home</span>
                     Selesai
                 </button>
             </div>
@@ -252,6 +299,46 @@
     </div>
 
     <script>
+        // Jurus Status Selector Premium (Aesthetic)
+        function setStatus(val) {
+            document.getElementById('status').value = val;
+
+            // State configs
+            const configs = {
+                open: { btn: 'btn-open', color: 'emerald', bg: 'emerald-50/50', text: 'emerald-700', sub: 'emerald-600/70', shadow: 'rgba(16,185,129,0.1)' },
+                progress: { btn: 'btn-progress', color: 'amber', bg: 'amber-50/50', text: 'amber-700', sub: 'amber-600/70', shadow: 'rgba(245,158,11,0.1)' },
+                closed: { btn: 'btn-closed', color: 'blue', bg: 'blue-50/50', text: 'blue-700', sub: 'blue-600/70', shadow: 'rgba(59,130,246,0.1)' }
+            };
+
+            // Reset all
+            document.querySelectorAll('.status-option').forEach(el => {
+                el.className = "status-option flex items-center justify-between p-4 rounded-2xl border-2 transition-all bg-white dark:bg-slate-800 border-slate-100 dark:border-slate-700 opacity-60";
+                el.querySelector('.material-symbols-outlined:last-child').classList.add('hidden');
+
+                // Reset internal text colors
+                const pItems = el.querySelectorAll('p');
+                if (pItems.length >= 2) {
+                    pItems[0].className = "text-[11px] font-black uppercase tracking-widest text-slate-700 dark:text-slate-300";
+                    pItems[1].className = "text-[9px] font-bold text-slate-400";
+                }
+            });
+
+            // Activate current
+            const c = configs[val];
+            const btn = document.getElementById(c.btn);
+            btn.className = `status-option flex items-center justify-between p-4 rounded-2xl border-2 transition-all bg-${c.bg} border-${c.color}-500 shadow-[0_0_15px_${c.shadow}]`;
+
+            const check = btn.querySelector('.material-symbols-outlined:last-child');
+            check.classList.remove('hidden');
+            check.className = `material-symbols-outlined text-${c.color}-500 animate-pulse`;
+
+            const pItems = btn.querySelectorAll('p');
+            if (pItems.length >= 2) {
+                pItems[0].className = `text-[11px] font-black uppercase tracking-widest text-${c.text}`;
+                pItems[1].className = `text-[9px] font-bold text-${c.sub}`;
+            }
+        }
+
         /* ── Auth Guard ── */
         if (!sessionStorage.getItem('mandorline_auth')) {
             window.location.href = 'index.html';

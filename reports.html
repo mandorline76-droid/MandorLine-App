@@ -6,10 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MandorLine - Riwayat Laporan</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1565C0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="logo.png">
+
     <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;900&display=swap"
         rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1"
         rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1565C0"
+                    }
+                }
+            }
+        }
+    </script>
     <style>
         body {
             font-family: 'Public Sans', sans-serif;
@@ -26,13 +43,41 @@
             animation: shimmer 1.5s infinite;
         }
 
-        @keyframes shimmer {
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+
+        .cursor-zoom-in {
+            cursor: zoom-in;
+        }
+
+        /* Spinner for Zoom Loading */
+        .zoom-loader {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top: 4px solid #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
             0% {
-                background-position: 200% 0;
+                transform: rotate(0deg);
             }
 
             100% {
-                background-position: -200% 0;
+                transform: rotate(360deg);
             }
         }
     </style>
@@ -41,9 +86,29 @@
 <body class="text-slate-900 leading-tight">
     <div class="max-w-md mx-auto min-h-screen bg-[#f1f5f9] relative pb-28 shadow-2xl">
 
+        <!-- Top Brand Bar -->
+        <div
+            class="bg-[#1565C0] px-6 py-6 flex items-center justify-between sticky top-0 z-40 shadow-xl border-b border-white/10">
+            <div class="flex items-center gap-5">
+                <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center p-2 shadow-lg">
+                    <img src="logo.png" class="w-12 h-12 object-contain">
+                </div>
+                <div>
+                    <span class="text-white font-black text-2xl tracking-tighter block leading-none">MandorLine</span>
+                    <span class="text-[10px] text-white/50 uppercase font-black tracking-[0.2em] mt-1.5 block">Digital
+                        Patrol</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <div
+                    class="w-12 h-12 rounded-full bg-white/10 border border-white/20 flex items-center justify-center overflow-hidden active:scale-90 transition-all">
+                    <span class="material-symbols-outlined text-white text-2xl">person</span>
+                </div>
+            </div>
+        </div>
+
         <!-- Header -->
-        <header
-            class="p-6 sticky top-0 bg-white/80 backdrop-blur-md z-30 border-b border-slate-100 flex items-center justify-between">
+        <header class="p-6 bg-white/80 backdrop-blur-md border-b border-slate-100 flex items-center justify-between">
             <div class="flex items-center gap-3">
                 <button onclick="window.location.href='patroli-step1.html'"
                     class="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-500 active:scale-95 transition-all">
@@ -120,19 +185,18 @@
         </section>
 
         <!-- Bottom Navigation -->
-        <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white/95 backdrop-blur-xl border-t border-slate-100 p-4 pb-10 px-12 flex justify-between items-center z-40 rounded-t-[2.5rem] shadow-xl"
-            style="padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));">
+        <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white/95 backdrop-blur-xl border-t border-slate-100 p-3 pb-3 px-12 flex justify-between items-center z-40 rounded-t-[2.5rem] shadow-xl"
+            style="padding-bottom: calc(0.3rem + env(safe-area-inset-bottom, 0px));">
             <button onclick="window.location.href='patroli-step1.html'"
-                class="flex flex-col items-center gap-1.5 text-slate-300 active:scale-95">
+                class="flex flex-col items-center gap-1 text-slate-300 active:scale-95">
                 <span class="material-symbols-outlined text-2xl">add_circle</span>
                 <span class="text-[8px] font-black uppercase tracking-widest">Baru</span>
             </button>
-            <button class="flex flex-col items-center gap-1.5 text-blue-600">
+            <button class="flex flex-col items-center gap-1 text-blue-600">
                 <span class="material-symbols-outlined text-2xl">assignment</span>
                 <span class="text-[8px] font-black uppercase tracking-widest">History</span>
             </button>
-            <button onclick="showLogoutModal()"
-                class="flex flex-col items-center gap-1.5 text-slate-300 active:scale-95">
+            <button onclick="showLogoutModal()" class="flex flex-col items-center gap-1 text-slate-300 active:scale-95">
                 <span class="material-symbols-outlined text-2xl">logout</span>
                 <span class="text-[8px] font-black uppercase tracking-widest">Keluar</span>
             </button>
@@ -145,15 +209,16 @@
         </div>
         <div class="bg-white w-full max-w-xs rounded-[2.5rem] p-8 shadow-2xl relative z-10 scale-90 opacity-0 transition-all duration-300 transform"
             id="logoutModalContent">
-            <div class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                <span class="material-symbols-outlined text-red-500 text-3xl">logout</span>
+            <div
+                class="w-18 h-18 bg-white border-2 border-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg p-2">
+                <img src="logo.png" class="w-12 h-12 object-contain">
             </div>
             <h3 class="text-xl font-black text-center text-slate-900 mb-2">Keluar Aplikasi?</h3>
             <p class="text-xs text-slate-500 text-center leading-relaxed mb-8">Anda akan diarahkan kembali ke halaman
                 login.</p>
             <div class="flex flex-col gap-3">
                 <button onclick="window.location.href='index.html'"
-                    class="w-full h-14 bg-red-500 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg shadow-red-200 active:scale-95 transition-all">Ya,
+                    class="w-full h-14 bg-[#1565C0] text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg shadow-blue-200 active:scale-95 transition-all">Ya,
                     Keluar</button>
                 <button onclick="hideLogoutModal()"
                     class="w-full h-14 bg-slate-50 text-slate-600 rounded-2xl font-black text-xs uppercase tracking-widest active:scale-95 transition-all">Batalkan</button>
@@ -186,12 +251,19 @@
 
     <!-- Photo Zoom Modal (Jurus Zoom In) -->
     <div id="photoZoomModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4">
-        <div class="absolute inset-0 bg-slate-900/95 backdrop-blur-md animate-fade-in" onclick="closeZoom()"></div>
+        <div class="absolute inset-0 bg-slate-900/95 backdrop-blur-lg animate-fade-in" onclick="closeZoom()"></div>
+
+        <!-- Loading Spinner -->
+        <div id="zoomSpinner" class="absolute z-10 hidden">
+            <div class="zoom-loader"></div>
+        </div>
+
         <div class="relative w-full max-w-md scale-90 opacity-0 transition-all duration-300 transform" id="zoomContent">
-            <img id="zoomedImg" src="" class="w-full h-auto rounded-[2rem] shadow-2xl border-4 border-white/10">
+            <img id="zoomedImg" src="" class="w-full h-auto rounded-[2.5rem] shadow-2xl border-2 border-white/20"
+                onload="hideZoomSpinner()">
             <button onclick="closeZoom()"
-                class="absolute -top-4 -right-4 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-xl active:scale-90 text-slate-900">
-                <span class="material-symbols-outlined">close</span>
+                class="absolute -top-4 -right-4 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-2xl active:scale-90 text-slate-900 transition-transform">
+                <span class="material-symbols-outlined font-black">close</span>
             </button>
         </div>
     </div>
@@ -541,15 +613,26 @@
             const m = document.getElementById('photoZoomModal');
             const img = document.getElementById('zoomedImg');
             const cont = document.getElementById('zoomContent');
+            const spinner = document.getElementById('zoomSpinner');
 
+            // Reset state
+            cont.classList.replace('scale-100', 'scale-90');
+            cont.classList.replace('opacity-100', 'opacity-0');
+
+            spinner.classList.remove('hidden');
             img.src = url;
+
             m.classList.remove('hidden');
             m.classList.add('flex');
 
             setTimeout(() => {
                 cont.classList.add('scale-100', 'opacity-100');
                 cont.classList.remove('scale-90', 'opacity-0');
-            }, 10);
+            }, 50);
+        }
+
+        function hideZoomSpinner() {
+            document.getElementById('zoomSpinner').classList.add('hidden');
         }
 
         function closeZoom() {
@@ -561,6 +644,8 @@
 
             setTimeout(() => {
                 m.classList.replace('flex', 'hidden');
+                m.classList.add('hidden');
+                document.getElementById('zoomedImg').src = "";
             }, 300);
         }
 

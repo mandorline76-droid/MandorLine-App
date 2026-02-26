@@ -220,12 +220,14 @@
             style="padding-bottom: calc(0.8rem + env(safe-area-inset-bottom, 0px));">
             <div class="max-w-md mx-auto flex items-center justify-between gap-4">
                 <button onclick="history.back()"
-                    class="flex-1 h-12 rounded-2xl border-2 border-primary text-primary font-black hover:bg-primary/5 transition-all active:scale-95 uppercase text-[10px] tracking-widest">
-                    Kembali
+                    class="flex-1 h-[72px] rounded-2xl border-2 border-primary text-primary font-bold hover:bg-primary/5 transition-all active:scale-95 uppercase text-xs tracking-widest flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-xl">arrow_back</span>
+                    <span>Kembali</span>
                 </button>
                 <button id="btnNext" onclick="nextStep()"
-                    class="flex-1 h-12 rounded-2xl bg-primary text-white font-black shadow-lg shadow-primary/30 hover:bg-primary/90 transition-all active:scale-95 uppercase text-[10px] tracking-widest">
-                    Lanjut
+                    class="flex-1 h-[72px] rounded-2xl bg-primary text-white font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all active:scale-95 uppercase text-xs tracking-widest flex items-center justify-center gap-2">
+                    <span>Lanjut</span>
+                    <span class="material-symbols-outlined text-xl">arrow_forward</span>
                 </button>
             </div>
         </div>
