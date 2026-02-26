@@ -65,7 +65,7 @@
             </div>
         </header>
 
-        <main class="flex-1 overflow-y-auto px-4 py-4 space-y-6 pb-32">
+        <main class="flex-1 overflow-y-auto px-4 py-4 space-y-6 pb-48">
             <div class="mb-4">
                 <h2 class="text-xl font-bold">Data Penanganan</h2>
                 <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Lengkapi detail penanganan temuan patroli.
@@ -80,10 +80,10 @@
                     <div class="relative">
                         <select id="prioritas"
                             class="w-full h-14 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-xl px-4 appearance-none focus:border-primary focus:ring-0 transition-all outline-none text-slate-900 dark:text-slate-100 font-medium">
-                            <option disabled selected value="">Pilih Prioritas (1, 2, 3)</option>
-                            <option value="1">Prioritas 1 (Mendesak)</option>
-                            <option value="2">Prioritas 2 (Normal)</option>
-                            <option value="3">Prioritas 3 (Pemantauan)</option>
+                            <option disabled selected value="">Pilih Prioritas</option>
+                            <option value="1">Prioritas 1</option>
+                            <option value="2">Prioritas 2</option>
+                            <option value="3">Prioritas 3</option>
                         </select>
                         <span
                             class="material-symbols-outlined absolute right-4 top-4 text-slate-400 pointer-events-none">expand_more</span>
@@ -201,22 +201,22 @@
 
         <!-- Navigation Buttons -->
         <footer
-            class="fixed bottom-0 left-0 right-0 z-40 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md p-6 pb-10 border-t border-primary/10 shadow-[0_-10px_30px_rgba(0,0,0,0.05)] flex justify-center"
-            style="padding-bottom: calc(2rem + env(safe-area-inset-bottom, 0px));">
-            <div class="w-full max-w-md flex flex-col items-center gap-4">
+            class="fixed bottom-0 left-0 right-0 z-40 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md p-3 pb-6 border-t border-primary/10 shadow-[0_-8px_30px_rgba(0,0,0,0.05)] flex justify-center"
+            style="padding-bottom: calc(0.8rem + env(safe-area-inset-bottom, 0px));">
+            <div class="w-full max-w-md flex flex-col items-center gap-3">
                 <div class="w-full flex items-center justify-between gap-4">
                     <button onclick="history.back()"
-                        class="flex-1 h-14 rounded-2xl border-2 border-primary text-primary font-black hover:bg-primary/5 transition-all active:scale-95 uppercase text-[10px] tracking-widest">
+                        class="flex-1 h-12 rounded-2xl border-2 border-primary text-primary font-black hover:bg-primary/5 transition-all active:scale-95 uppercase text-[10px] tracking-widest">
                         Kembali
                     </button>
                     <button id="btnSubmit" onclick="submitReport()"
-                        class="flex-1 h-14 rounded-2xl bg-primary text-white font-black shadow-lg shadow-primary/30 hover:bg-primary/90 transition-all active:scale-95 uppercase text-[10px] tracking-widest flex items-center justify-center gap-2">
+                        class="flex-1 h-12 rounded-2xl bg-primary text-white font-black shadow-lg shadow-primary/30 hover:bg-primary/90 transition-all active:scale-95 uppercase text-[10px] tracking-widest flex items-center justify-center gap-2">
                         <span>Kirim</span>
                         <span class="material-symbols-outlined text-sm">send</span>
                     </button>
                 </div>
-                <p class="text-[9px] text-slate-400 uppercase font-black tracking-[0.2em] opacity-60">Finalisasi data &
-                    kirim laporan</p>
+                <p class="text-[9px] text-slate-400 uppercase font-black tracking-[0.2em] opacity-50">Finalisasi & Kirim
+                    Laporan</p>
             </div>
         </footer>
     </div>
@@ -236,16 +236,16 @@
                 <button onclick="window.location.href='preview.html'"
                     class="w-full h-12 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/30 uppercase text-[10px] tracking-widest flex items-center justify-center gap-2">
                     <span class="material-symbols-outlined text-sm">visibility</span>
-                    Lihat Preview PDF
+                    Preview PDF
                 </button>
                 <button onclick="window.location.href='reports.html'"
                     class="w-full h-12 bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-300 font-bold rounded-xl border border-blue-200 dark:border-blue-800 uppercase text-[10px] tracking-widest flex items-center justify-center gap-2">
-                    <span class="material-symbols-outlined text-sm">database</span>
-                    Database Laporan
+                    <span class="material-symbols-outlined text-sm">list_alt</span>
+                    History
                 </button>
                 <button onclick="window.location.href='patroli-step1.html'"
-                    class="w-full h-12 bg-slate-50 dark:bg-slate-800/50 text-slate-400 dark:text-slate-500 font-bold rounded-xl uppercase text-[10px] tracking-widest">
-                    Buat Laporan Baru
+                    class="w-full h-12 bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-bold rounded-xl uppercase text-[10px] tracking-widest">
+                    Selesai
                 </button>
             </div>
         </div>
