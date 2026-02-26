@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1565C0",
+                        "secondary": "#0f4c81",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#221610",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <title>Patroli Mandor Line Penyulang - Step 2</title>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased">
+    <div
+        class="relative flex min-h-screen w-full flex-col overflow-x-hidden max-w-md mx-auto shadow-2xl bg-background-light dark:bg-background-dark">
+
+        <!-- Header -->
+        <header class="sticky top-0 z-10 bg-background-light dark:bg-background-dark border-b border-primary/10">
+            <div class="flex items-center p-4 pb-2 justify-between">
+                <button onclick="history.back()"
+                    class="text-primary flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-primary/10 transition-colors">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                </button>
+                <h2
+                    class="text-slate-900 dark:text-slate-100 text-sm font-bold uppercase tracking-wider flex-1 text-center px-2">
+                    PATROLI MANDOR LINE
+                </h2>
+                <div class="size-10"></div>
+            </div>
+
+            <!-- Step Indicator -->
+            <div class="flex flex-col items-center pb-4">
+                <div class="flex w-full flex-row items-center justify-center gap-3 py-3">
+                    <div class="h-2 w-8 rounded-full bg-primary/30"></div>
+                    <div class="h-2 w-8 rounded-full bg-primary"></div>
+                    <div class="h-2 w-8 rounded-full bg-primary/30"></div>
+                </div>
+                <p class="text-primary text-xs font-bold uppercase tracking-widest">Step 2: Temuan</p>
+            </div>
+        </header>
+
+        <!-- Form Content -->
+        <main class="flex-1 overflow-y-auto px-4 py-4 space-y-6">
+
+
+
+            <!-- Dropdown: Temuan -->
+            <div class="space-y-1.5 focus-within:text-primary transition-colors">
+                <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Jenis Temuan</label>
+                <div class="relative">
+                    <select id="jenisTemuan"
+                        class="appearance-none w-full rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:border-primary focus:ring-0 h-12 px-4 text-sm pr-10 transition-all font-medium">
+                        <option value="">Pilih temuan</option>
+                        <option value="pohon">Pohon Dekat Dengan Jaringan SUTM A3C/A3CS <2,5< /option>
+                        <option value="arku">Arku Layangan</option>
+                        <option value="andongan_gsw">Andongan Gsw Kendor</option>
+                        <option value="sutm_bangunan">SUTM Dekat Bangunan/Baliho</option>
+                        <option value="tiang_miring">Tiang TM Miring</option>
+                        <option value="tiang_keropos">Tiang TM Keropos/Retak</option>
+                        <option value="suara_desis">Suara Desis Pada Jaringan/Kontruksi</option>
+                        <option value="andongan_sutm">Andongan SUTM Kendor</option>
+                        <option value="tumbuhan_rambat">Tumbuhan Rambat Pada Tiang/Kontruksi Gardu</option>
+                        <option value="isolator_flash">Isolator Flash Over/Berlumut/Pecah</option>
+                        <option value="kawat_rantas">Kawat SUTM Rantas</option>
+                        <option value="fco_flash">FCO Flash Over/Berlumut/Pecah</option>
+                        <option value="arrester_flash">Arrester Flash Over/Berlumut/Pecah</option>
+                        <option value="trafo_bocor">Trafo rembes/bocor</option>
+                    </select>
+                    <span
+                        class="material-symbols-outlined absolute right-3 top-3 text-slate-400 pointer-events-none">expand_more</span>
+                </div>
+            </div>
+
+            <!-- Manual Input: Lokasi -->
+            <div class="space-y-1.5 focus-within:text-primary transition-colors">
+                <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Lokasi Temuan (Nama
+                    Jalan/Patokan)</label>
+                <input id="lokasi"
+                    class="w-full rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:border-primary focus:ring-0 h-12 px-4 text-sm transition-all"
+                    type="text" />
+            </div>
+
+            <!-- Photo Upload Slots -->
+            <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Foto Temuan 1</label>
+                    <input type="file" id="file1" accept="image/*" capture="environment" class="hidden"
+                        onchange="handleFile(this, 'preview1', 'step2_foto1')" />
+                    <div onclick="document.getElementById('file1').click()"
+                        class="aspect-square w-full rounded-xl border-2 border-dashed border-primary/30 bg-primary/5 flex flex-col items-center justify-center text-primary cursor-pointer hover:bg-primary/10 overflow-hidden">
+                        <img id="preview1" class="hidden w-full h-full object-cover" />
+                        <div id="icon1" class="flex flex-col items-center">
+                            <span class="material-symbols-outlined text-3xl">add_a_photo</span>
+                            <span class="text-[10px] mt-1 font-bold">AMBIL FOTO</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Foto Temuan 2</label>
+                    <input type="file" id="file2" accept="image/*" capture="environment" class="hidden"
+                        onchange="handleFile(this, 'preview2', 'step2_foto2')" />
+                    <div onclick="document.getElementById('file2').click()"
+                        class="aspect-square w-full rounded-xl border-2 border-dashed border-primary/30 bg-primary/5 flex flex-col items-center justify-center text-primary cursor-pointer hover:bg-primary/10 overflow-hidden">
+                        <img id="preview2" class="hidden w-full h-full object-cover" />
+                        <div id="icon2" class="flex flex-col items-center">
+                            <span class="material-symbols-outlined text-3xl">add_a_photo</span>
+                            <span class="text-[10px] mt-1 font-bold">AMBIL FOTO</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                function handleFile(input, previewId, sessionKey) {
+                    const file = input.files[0];
+                    if (!file) return;
+
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const img = new Image();
+                        img.onload = function () {
+                            const canvas = document.createElement('canvas');
+                            let width = img.width;
+                            let height = img.height;
+                            const max_size = 800; // Ukuran max 800px agar tidak berat
+
+                            if (width > height) {
+                                if (width > max_size) {
+                                    height *= max_size / width;
+                                    width = max_size;
+                                }
+                            } else {
+                                if (height > max_size) {
+                                    width *= max_size / height;
+                                    height = max_size;
+                                }
+                            }
+                            canvas.width = width;
+                            canvas.height = height;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0, width, height);
+
+                            // Kompres ke JPEG kualitas 0.7
+                            const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+
+                            document.getElementById(previewId).src = compressedBase64;
+                            document.getElementById(previewId).classList.remove('hidden');
+
+                            // Sembunyikan ikon "AMBIL FOTO"
+                            const iconId = 'icon' + previewId.replace('preview', '');
+                            if (document.getElementById(iconId)) {
+                                document.getElementById(iconId).classList.add('hidden');
+                            }
+
+                            try {
+                                sessionStorage.setItem(sessionKey, compressedBase64);
+                            } catch (err) {
+                                alert("Memori Browser Penuh! Foto tidak tersimpan. Coba bersihkan Cache.");
+                            }
+                        };
+                        img.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            </script>
+
+            <!-- Automatic GPS Tagging -->
+            <div class="p-4 rounded-2xl bg-primary/5 border border-primary/10 flex items-center gap-4">
+                <div class="bg-primary p-2.5 rounded-xl text-white shadow-lg shadow-primary/20">
+                    <span class="material-symbols-outlined">location_on</span>
+                </div>
+                <div class="flex-1">
+                    <p class="text-[10px] uppercase font-bold text-primary tracking-widest">Tagging Lokasi</p>
+                    <p id="gpsDisplay" class="text-sm font-mono font-bold text-slate-700 dark:text-slate-300">Mencari
+                        lokasi...</p>
+                </div>
+                <button onclick="getLocation()"
+                    class="text-primary hover:bg-primary/10 p-2 rounded-full transition-colors">
+                    <span class="material-symbols-outlined">refresh</span>
+                </button>
+            </div>
+
+            <!-- Manual Keterangan -->
+            <div class="space-y-1.5 pb-24 focus-within:text-primary transition-colors">
+                <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Keterangan Tambahan</label>
+                <textarea id="keterangan"
+                    class="w-full rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:border-primary focus:ring-0 p-4 text-sm resize-none transition-all"
+                    rows="3"></textarea>
+            </div>
+        </main>
+
+        <!-- Navigation Buttons -->
+        <footer
+            class="fixed bottom-0 left-0 right-0 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md p-4 border-t border-primary/10 flex justify-center">
+            <div class="w-full max-w-md flex items-center justify-between gap-3">
+                <button onclick="history.back()"
+                    class="w-32 h-12 rounded-xl border-2 border-primary text-primary font-bold hover:bg-primary/5 transition-all active:scale-95 uppercase text-xs tracking-widest">
+                    Kembali
+                </button>
+                <button id="btnNext" onclick="nextStep()"
+                    class="w-32 h-12 rounded-xl bg-primary text-white font-bold shadow-lg shadow-primary/30 hover:bg-primary/90 transition-all active:scale-95 uppercase text-xs tracking-widest">
+                    Next
+                </button>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        /* ── Auth Guard ── */
+        if (!sessionStorage.getItem('mandorline_auth')) {
+            window.location.href = 'index.html';
+        }
+
+        /* ── GPS Functionality ── */
+        function getLocation() {
+            const display = document.getElementById('gpsDisplay');
+            display.textContent = "Mencari lokasi...";
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const lat = position.coords.latitude.toFixed(6);
+                        const lon = position.coords.longitude.toFixed(6);
+                        display.textContent = `${lat}°, ${lon}°`;
+                        sessionStorage.setItem('step2_gps', `${lat}, ${lon}`);
+                    },
+                    (error) => {
+                        console.error("GPS Error:", error);
+                        display.textContent = "Gagal mendapatkan lokasi";
+                        alert("Gagal mendapatkan lokasi. Pastikan GPS aktif dan beri izin akses lokasi.");
+                    },
+                    { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+                );
+            } else {
+                display.textContent = "GPS tidak didukung";
+            }
+        }
+        // Jalankan saat load
+        getLocation();
+
+        function nextStep() {
+            const gps = sessionStorage.getItem('step2_gps') || "-";
+            const lokasiManual = document.getElementById('lokasi').value;
+
+            // Gabungkan lokasi manual dan GPS
+            const lokasiFinal = `${lokasiManual} (${gps})`;
+
+            sessionStorage.setItem('step2_jenisTemuan', document.getElementById('jenisTemuan').value);
+            sessionStorage.setItem('step2_lokasi', lokasiFinal);
+            sessionStorage.setItem('step2_keterangan', document.getElementById('keterangan').value);
+
+            window.location.href = 'patroli-step3.html';
+        }
+    </script>
+</body>
+
+</html>

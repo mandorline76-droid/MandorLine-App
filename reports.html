@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MandorLine - Riwayat Laporan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;900&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1"
+        rel="stylesheet" />
+    <style>
+        body {
+            font-family: 'Public Sans', sans-serif;
+            background: #f8fafc;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .shimmer {
+            background: linear-gradient(90deg, #f3f4f6 25%, #f9fafb 50%, #f3f4f6 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: 200% 0;
+            }
+
+            100% {
+                background-position: -200% 0;
+            }
+        }
+    </style>
+</head>
+
+<body class="text-slate-900 leading-tight">
+    <div class="max-w-md mx-auto min-h-screen bg-[#f1f5f9] relative pb-28 shadow-2xl">
+
+        <!-- Header -->
+        <header
+            class="p-6 sticky top-0 bg-white/80 backdrop-blur-md z-30 border-b border-slate-100 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <button onclick="window.location.href='patroli-step1.html'"
+                    class="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-500 active:scale-95 transition-all">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                </button>
+                <div>
+                    <h1 class="text-lg font-black text-slate-900 leading-none">Database Laporan</h1>
+                    <p class="text-[9px] uppercase font-bold text-blue-600 tracking-wider mt-1">Sistem MandorLine</p>
+                </div>
+            </div>
+            <button onclick="fetchData()"
+                class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 active:rotate-180 transition-all">
+                <span class="material-symbols-outlined text-xl">sync</span>
+            </button>
+        </header>
+
+        <!-- Dynamic Counter -->
+        <div class="px-6 mt-6 flex gap-3">
+            <div class="flex-1 bg-white p-5 rounded-[2.5rem] shadow-sm border border-slate-100">
+                <p class="text-[8px] uppercase font-bold text-slate-400 tracking-widest">Total Laporan</p>
+                <h3 class="text-3xl font-black text-slate-800" id="statTotal">0</h3>
+            </div>
+            <div class="flex-1 bg-blue-600 p-5 rounded-[2.5rem] shadow-xl shadow-blue-200 text-white">
+                <p class="text-[8px] uppercase font-bold text-white/60 tracking-widest">Penyulang</p>
+                <h3 class="text-3xl font-black" id="statPenyulang">0</h3>
+            </div>
+        </div>
+
+        <!-- Smart Search & Filter -->
+        <div class="px-6 mt-6 space-y-3">
+            <div class="relative">
+                <input type="text" id="searchInput" oninput="applyFilters()"
+                    placeholder="Cari No Kondisi, Petugas, atau Lokasi..."
+                    class="w-full h-14 bg-white rounded-2xl border-none shadow-sm px-14 text-sm focus:ring-2 focus:ring-blue-500 transition-all outline-none">
+                <span class="material-symbols-outlined absolute left-5 top-4 text-slate-300">search</span>
+                <button onclick="resetFilters()" class="absolute right-4 top-4 text-slate-300 hover:text-red-400">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+
+            <div class="flex gap-2 overflow-x-auto no-scrollbar py-1">
+                <select id="filterPenyulang" onchange="applyFilters()"
+                    class="h-10 px-4 bg-white border border-slate-100 rounded-full text-[10px] font-black uppercase text-slate-500 shadow-sm focus:ring-2 focus:ring-blue-500 outline-none min-w-[120px]">
+                    <option value="all">Semua Penyulang</option>
+                </select>
+                <div id="quickStatus" class="flex gap-2">
+                    <button onclick="setQuickStatus('all')"
+                        class="status-btn active px-4 py-2 rounded-full border border-slate-100 bg-white text-[10px] font-black uppercase shadow-sm transition-all whitespace-nowrap">Semua</button>
+                    <button onclick="setQuickStatus('open')"
+                        class="status-btn px-4 py-2 rounded-full border border-slate-100 bg-white text-[10px] font-black uppercase shadow-sm transition-all whitespace-nowrap">Open</button>
+                    <button onclick="setQuickStatus('closed')"
+                        class="status-btn px-4 py-2 rounded-full border border-slate-100 bg-white text-[10px] font-black uppercase shadow-sm transition-all whitespace-nowrap">Selesai</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Compact Zebra List -->
+        <section class="mt-8 px-6">
+            <div class="flex items-center justify-between mb-4 px-2">
+                <h2 class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Daftar Laporan Terkini</h2>
+                <div id="dataCount" class="text-[9px] font-black text-blue-600 px-2 py-0.5 rounded-lg">0 Data</div>
+            </div>
+
+            <div id="loading" class="space-y-3">
+                <div class="h-16 w-full rounded-2xl shimmer"></div>
+                <div class="h-16 w-full rounded-2xl shimmer"></div>
+                <div class="h-16 w-full rounded-2xl shimmer"></div>
+            </div>
+
+            <div id="reportContainer"
+                class="hidden overflow-hidden rounded-3xl border border-slate-100 shadow-sm bg-white divide-y divide-slate-50">
+                <!-- List will be injected here -->
+            </div>
+        </section>
+
+        <!-- Bottom Navigation -->
+        <nav
+            class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white/95 backdrop-blur-xl border-t border-slate-100 p-4 px-12 flex justify-between items-center z-40 rounded-t-[2.5rem] shadow-xl">
+            <button onclick="window.location.href='patroli-step1.html'"
+                class="flex flex-col items-center gap-1.5 text-slate-300 active:scale-95">
+                <span class="material-symbols-outlined text-2xl">add_circle</span>
+                <span class="text-[8px] font-black uppercase tracking-widest">Baru</span>
+            </button>
+            <button class="flex flex-col items-center gap-1.5 text-blue-600">
+                <span class="material-symbols-outlined text-2xl">assignment</span>
+                <span class="text-[8px] font-black uppercase tracking-widest">History</span>
+            </button>
+            <button onclick="if(confirm('Keluar?')) window.location.href='index.html'"
+                class="flex flex-col items-center gap-1.5 text-slate-300 active:scale-95">
+                <span class="material-symbols-outlined text-2xl">logout</span>
+                <span class="text-[8px] font-black uppercase tracking-widest">Keluar</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- Detail Swipe-up -->
+    <div id="detailView"
+        class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm translate-y-full transition-all duration-500 overflow-y-auto no-scrollbar hidden">
+        <div class="max-w-md mx-auto min-h-screen bg-white relative shadow-2xl rounded-t-[3rem] mt-10 p-6 pt-2">
+            <div class="w-12 h-1.5 bg-slate-100 rounded-full mx-auto my-4"></div>
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <p class="text-[10px] font-black text-blue-600 uppercase tracking-widest" id="detNoKondisi">HAR-XXXX
+                    </p>
+                    <h2 class="text-xl font-black text-slate-800">Detail Laporan</h2>
+                </div>
+                <button onclick="closeDetail()"
+                    class="w-10 h-10 bg-slate-50 rounded-full flex items-center justify-center text-slate-400">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <div id="detContent" class="space-y-8 pb-32"></div>
+        </div>
+    </div>
+
+    <script>
+        // SOLUSI UNTUK KONEKSI GAGAL TERUS:
+        // Gunakan Proxy AllOrigins sebagai jembatan agar tidak kena blokir CORS/Google Redirect
+        const URL1 = 'https://script.google.com/macros/s/AKfycbxkmCbtd8jWmVGZ2MAIo9mUKrnxfZsuS4X07D7wM3-2vkQhLQbyJX5rnJNz3l80d_aNuA/exec';
+        const URL2 = 'https://script.google.com/macros/s/AKfycbyP51OxeWQTU02m8n1wSAuVGXS5auxK7o-AJGYqUgorZ9ZpInUgqlM22ikiTESBXg7J8g/exec';
+
+        let allData = [];
+        let filteredData = [];
+        let activeStatus = 'all';
+
+        async function fetchData() {
+            const loading = document.getElementById('loading');
+            const container = document.getElementById('reportContainer');
+            loading.classList.remove('hidden');
+            container.classList.add('hidden');
+
+            async function pullData() {
+                // Daftar target URL dan Proxy yang akan dicoba
+                const targets = [URL1, URL2];
+                const proxies = [
+                    (u) => `${u}?t=${Date.now()}`, // Langsung
+                    (u) => `https://api.allorigins.win/get?v=${Date.now()}&url=${encodeURIComponent(u + '?t=' + Date.now())}`, // AllOrigins
+                    (u) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u + '?t=' + Date.now())}` // CodeTabs
+                ];
+
+                for (let target of targets) {
+                    for (let getProxy of proxies) {
+                        try {
+                            const res = await fetch(getProxy(target));
+                            let json = await res.json();
+                            // Handle AllOrigins wrapper
+                            if (json && json.contents) json = JSON.parse(json.contents);
+                            if (json) return json;
+                        } catch (e) {
+                            console.warn("Retrying with another proxy/URL...");
+                        }
+                    }
+                }
+                throw new Error("Gagal terhubung ke Database Utama maupun Backup.");
+            }
+
+            try {
+                const data = await pullData();
+                renderWithData(data);
+            } catch (err) {
+                console.error(err);
+                container.classList.remove('hidden');
+                container.innerHTML = `
+                    <div class="py-20 text-center px-8">
+                        <div class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span class="material-symbols-outlined text-3xl text-red-400">cloud_off</span>
+                        </div>
+                        <h3 class="text-slate-800 font-black text-sm">Koneksi Database Gagal</h3>
+                        <p class="text-[10px] text-slate-400 mt-2">${err.message}</p>
+                        <button onclick="fetchData()" class="mt-8 w-full py-4 bg-blue-600 text-white font-black text-[11px] rounded-2xl shadow-lg active:scale-95 transition-all">COBA LAGI</button>
+                    </div>
+                `;
+            } finally {
+                loading.classList.add('hidden');
+            }
+        }
+
+        // JURUS PAMUNGKAS: Super Parser yang bisa deteksi format Object {} maupun Array []
+        function renderWithData(data) {
+            let list = Array.isArray(data) ? data : (data.reports || data.data || []);
+
+            // Simpan raw untuk debug
+            window.rawDatabase = data;
+
+            // Jika formatnya Array of Arrays (Header di baris 1)
+            if (list.length > 1 && Array.isArray(list[0])) {
+                const head = list[0].map(h => h.toString().toLowerCase().replace(/[^a-z0-9]/g, ''));
+                list = list.slice(1).map(row => {
+                    const o = {};
+                    row.forEach((v, i) => { if (head[i]) o[head[i]] = v; });
+                    return o;
+                });
+            }
+
+            // Normalisasi TOTAL semua Key
+            allData = list.map(item => {
+                if (typeof item !== 'object' || item === null) return null;
+                const clean = {};
+                for (let k in item) {
+                    const ck = k.toString().toLowerCase().replace(/[^a-z0-9]/g, '');
+                    clean[ck] = item[k];
+                }
+                return clean;
+            }).filter(Boolean).reverse();
+
+            // Debug Helper: Klik Judul "Detail Laporan" 5x untuk intip Data Asli
+            let clickCount = 0;
+            document.querySelector('h2').onclick = () => {
+                clickCount++;
+                if (clickCount >= 5) {
+                    alert("DEBUG MODE:\n" + JSON.stringify(allData[0] || "Data Kosong", null, 2));
+                    clickCount = 0;
+                }
+            };
+
+            // Setup Dropdown Penyulang
+            const penyulangList = [...new Set(allData.map(d => getV(d, 'penyulang')))].filter(p => p && p !== "-").sort();
+            const select = document.getElementById('filterPenyulang');
+            select.innerHTML = '<option value="all">Semua Penyulang</option>';
+            penyulangList.forEach(p => select.innerHTML += `<option value="${p.toLowerCase()}">${p}</option>`);
+
+            applyFilters();
+        }
+
+        function setQuickStatus(val) {
+            activeStatus = val;
+            document.querySelectorAll('.status-btn').forEach(b => {
+                b.classList.remove('active', 'bg-blue-600', 'text-white', 'border-blue-600');
+                if (b.innerText.toLowerCase() === val || (b.innerText.toLowerCase() === 'semua' && val === 'all')) {
+                    b.classList.add('active', 'bg-blue-600', 'text-white', 'border-blue-600');
+                }
+            });
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const pVal = document.getElementById('filterPenyulang').value;
+
+            filteredData = allData.filter(d => {
+                const searchStr = `${d.nokondisi} ${d.namapetugas} ${d.penyulang} ${d.lokasi}`.toLowerCase();
+                const matchSearch = !query || searchStr.includes(query);
+                const matchPenyulang = pVal === 'all' || (d.penyulang || '').toLowerCase() === pVal;
+
+                const s = (d.status || 'OPEN').toLowerCase();
+                const matchStatus = activeStatus === 'all' ||
+                    (activeStatus === 'open' && (s.includes('open') || s.includes('progress'))) ||
+                    (activeStatus === 'closed' && (s.includes('close') || s.includes('selesai')));
+
+                return matchSearch && matchPenyulang && matchStatus;
+            });
+
+            renderUI();
+        }
+
+        function renderUI() {
+            const c = document.getElementById('reportContainer');
+            c.innerHTML = '';
+            c.classList.remove('hidden');
+
+            document.getElementById('statTotal').innerText = allData.length;
+            document.getElementById('statPenyulang').innerText = new Set(allData.map(d => d.penyulang).filter(Boolean)).size;
+            document.getElementById('dataCount').innerText = `${filteredData.length} Laporan`;
+
+            if (filteredData.length === 0) {
+                c.innerHTML = '<div class="py-14 text-center text-slate-300 font-bold text-[10px] uppercase tracking-widest">Tidak ada data ditemukan</div>';
+                return;
+            }
+
+            c.className = "overflow-hidden rounded-3xl border border-slate-100 shadow-sm bg-white divide-y divide-slate-50";
+
+            filteredData.forEach((d, i) => {
+                const isClosed = (d.status || '').toLowerCase().includes('close') || (d.status || '').toLowerCase().includes('selesai');
+                const row = `
+                    <div onclick="showDetail(${i})" class="${i % 2 !== 0 ? 'bg-blue-50/30' : 'bg-white'} px-6 py-4 active:bg-blue-100 flex items-center gap-4 cursor-pointer transition-all">
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2">
+                                <span class="text-[11px] font-black text-slate-800">${d.nokondisi || '-'}</span>
+                                <span class="px-1.5 py-0.5 rounded text-[7px] font-black uppercase ${isClosed ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}">${isClosed ? 'OK' : 'OPEN'}</span>
+                            </div>
+                            <div class="flex items-center justify-between mt-1 opacity-60">
+                                <p class="text-[9px] font-bold uppercase truncate pr-4">${d.penyulang || '-'} • ${d.namapetugas || '-'}</p>
+                                <p class="text-[8px] font-medium">${(d.waktupatroli || '').split(',')[0]}</p>
+                            </div>
+                        </div>
+                        <span class="material-symbols-outlined text-slate-300 text-sm">chevron_right</span>
+                    </div>
+                `;
+                c.insertAdjacentHTML('beforeend', row);
+            });
+        }
+
+        // Helper untuk mengambil nilai dengan kunci yang fleksibel
+        function getV(obj, ...keys) {
+            if (!obj) return "-";
+            for (let k of keys) {
+                const cleanK = k.toLowerCase().replace(/[^a-z0-9]/g, '');
+                if (obj[cleanK] !== undefined && obj[cleanK] !== null && obj[cleanK] !== "") return obj[cleanK];
+            }
+            // Tambahan: Cari yang mengandung kata (Partial Match) jika tidak ketemu exact
+            for (let key in obj) {
+                for (let k of keys) {
+                    const ck = k.toLowerCase().replace(/[^a-z0-9]/g, '');
+                    if (key.includes(ck)) return obj[key];
+                }
+            }
+            return "-";
+        }
+
+        // Helper pintar untuk mencari foto (Cek Key -> Cek Posisi -> Cek URL)
+        function findPhoto(obj, indexPrefer, ...keys) {
+            // 1. Cek berdasarkan Key (Nama Kolom)
+            for (let k of keys) {
+                const ck = k.toLowerCase().replace(/[^a-z0-9]/g, '');
+                for (let key in obj) {
+                    if (key.includes(ck)) {
+                        const val = obj[key]?.toString().trim();
+                        if (val && val.startsWith('http')) return val;
+                    }
+                }
+            }
+            // 2. Cek berdasarkan Urutan Kolom (Posisi) - Link biasanya Col 12,13,14
+            const values = Object.values(obj);
+            if (values[indexPrefer] && values[indexPrefer].toString().startsWith('http')) {
+                return values[indexPrefer].toString().trim();
+            }
+            // 3. Scan Total: Cari apapun yang mengandung "ibb.co" atau "http" tapi bukan field lain
+            for (let v of values) {
+                const s = v?.toString().trim();
+                if (s && s.startsWith('http') && (s.includes('ibb.co') || s.includes('imgbb'))) return s;
+            }
+            return "-";
+        }
+
+        function showDetail(idx) {
+            const d = filteredData[idx];
+            if (!d) return;
+
+            // Mapping Super Jitu untuk Gambar (Prioritas Nama -> Urutan -> Scan)
+            const f1 = findPhoto(d, 12, 'link1', 'foto1', 'kondisi', 'temuan', 'gambar1');
+            const f2 = findPhoto(d, 13, 'link2', 'foto2', 'detail', 'jarak', 'gambar2');
+            const fA = findPhoto(d, 14, 'linkaction', 'fotoaction', 'tindakan', 'perbaikan', 'gambar3', 'action');
+
+            document.getElementById('detNoKondisi').innerText = getV(d, 'nokondisi', 'no', 'kode');
+            const c = document.getElementById('detContent');
+
+            console.log("Detail Data:", d);
+
+            c.innerHTML = `
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-slate-50 p-5 rounded-[2.5rem]">
+                        <p class="text-[8px] font-black uppercase text-slate-400">Petugas</p>
+                        <p class="text-xs font-black truncate">${getV(d, 'namapetugas', 'petugas', 'nama')}</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-[2.5rem]">
+                        <p class="text-[8px] font-black uppercase text-slate-400">Penyulang</p>
+                        <p class="text-xs font-black truncate">${getV(d, 'penyulang', 'feeder')}</p>
+                    </div>
+                </div>
+
+                <div class="bg-blue-600 p-6 rounded-[2.5rem] text-white shadow-xl shadow-blue-100 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
+                    <p class="text-[8px] font-black uppercase tracking-widest text-white/50">Temuan Utama</p>
+                    <h4 class="text-lg font-black mt-1 leading-tight">${getV(d, 'jenistemuan', 'temuan', 'kerusakan')}</h4>
+                    <div class="mt-4 p-4 bg-black/10 rounded-2xl text-[11px] italic leading-relaxed">
+                        "${getV(d, 'keterangan', 'catatan', 'deskripsi', 'uraian')}"
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    ${renderImg(f1, "Kondisi")}
+                    ${renderImg(f2, "Detail")}
+                    <div class="col-span-2">${renderImg(fA, "Action Taken")}</div>
+                </div>
+
+                <div class="bg-slate-900 text-white/80 p-8 rounded-[3rem] space-y-4">
+                    <div class="flex justify-between items-start border-b border-white/10 pb-4">
+                       <div>
+                           <p class="text-[8px] uppercase text-white/40 tracking-widest">Pelaksana</p>
+                           <p class="text-xs font-black mt-1 text-white">${getV(d, 'pelaksana')}</p>
+                       </div>
+                       <div class="text-right">
+                           <p class="text-[8px] uppercase text-white/40 tracking-widest">Prioritas</p>
+                           <p class="text-xs font-black mt-1 text-amber-400">${getV(d, 'prioritas')}</p>
+                       </div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-[8px] uppercase text-white/40 tracking-widest mb-1">Status Laporan</p>
+                            <p class="text-xs font-black text-white px-3 py-1 bg-white/10 rounded-lg inline-block">${getV(d, 'status').toUpperCase()}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-[8px] uppercase text-white/40 tracking-widest mb-1">Cuaca</p>
+                            <p class="text-[10px] font-bold text-white">${getV(d, 'cuaca', 'weather')}</p>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-[8px] uppercase text-white/40 tracking-widest mb-1">Koordinat/Lokasi</p>
+                        <p class="text-[10px] leading-relaxed italic">${getV(d, 'lokasi')}</p>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('detailView').classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('detailView').classList.remove('translate-y-full');
+            }, 50);
+        }
+
+        function renderImg(u, l) {
+            if (!u || u.length < 10 || u === '-') {
+                return `
+                    <div class="aspect-square bg-slate-50 rounded-[2.5rem] flex flex-col items-center justify-center text-slate-300 border-2 border-dashed border-slate-100">
+                        <span class="material-symbols-outlined text-3xl mb-1">image_not_supported</span>
+                        <span class="text-[8px] font-bold uppercase">${l}</span>
+                    </div>
+                `;
+            }
+
+            // JURUS ANTI-BLOKIR ISP: Gunakan Image Proxy (weserv.nl)
+            // Ini akan mengambil gambar lewat server lain supaya tidak kena blokir provider lokal
+            let proxyUrl = u;
+            if (u.includes('ibb.co')) {
+                // Bersihkan URL (pastikan tidak ada spasi/titik di ujung)
+                const cleanUrl = u.trim().split('?')[0];
+                proxyUrl = `https://images.weserv.nl/?url=${encodeURIComponent(cleanUrl)}`;
+            }
+
+            return `
+                <div class="relative aspect-square rounded-[2.5rem] overflow-hidden shadow-sm border border-slate-100 transition-all hover:shadow-md">
+                    <img src="${proxyUrl}" 
+                         referrerpolicy="no-referrer" 
+                         crossorigin="anonymous"
+                         class="w-full h-full object-cover" 
+                         loading="lazy"
+                         onerror="this.src='${u}'; this.onerror=null;">
+                    <div class="absolute bottom-3 left-3 right-3 bg-white/90 backdrop-blur-md px-3 py-2 rounded-2xl text-[8px] font-black uppercase text-center text-slate-600 border border-slate-100">
+                        ${l}
+                    </div>
+                    <a href="${u}" target="_blank" referrerpolicy="no-referrer" class="absolute inset-0"></a>
+                </div>
+            `;
+        }
+
+        function closeDetail() {
+            document.getElementById('detailView').classList.add('translate-y-full');
+            setTimeout(() => document.getElementById('detailView').classList.add('hidden'), 500);
+        }
+
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('filterPenyulang').value = 'all';
+            setQuickStatus('all');
+        }
+
+        fetchData();
+    </script>
+</body>
+
+</html>

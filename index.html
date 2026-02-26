@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>MANDORLINE – Login</title>
+    <!-- PWA SETTINGS -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2563eb">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3209/3209674.png">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            height: 100%;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* ── Blue Sky + Tower Background ── */
+        .bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            background: linear-gradient(180deg,
+                    #0d4a96 0%,
+                    #1565C0 20%,
+                    #1976D2 42%,
+                    #2196F3 65%,
+                    #64b3f4 85%,
+                    #b8d9f7 100%);
+        }
+
+        .bg::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 400px 100px at 15% 58%, rgba(255, 255, 255, 0.13) 0%, transparent 70%),
+                radial-gradient(ellipse 280px 70px at 60% 52%, rgba(255, 255, 255, 0.10) 0%, transparent 70%),
+                radial-gradient(ellipse 320px 80px at 85% 65%, rgba(255, 255, 255, 0.09) 0%, transparent 70%),
+                radial-gradient(ellipse 180px 50px at 40% 70%, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
+        }
+
+        .bg::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 30%;
+            background: linear-gradient(0deg, rgba(80, 150, 230, 0.18) 0%, transparent 100%);
+        }
+
+        /* ── Centered Card ── */
+        .card-wrap {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 20px;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 44px 40px 36px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 20px 70px rgba(0, 50, 140, 0.30), 0 4px 20px rgba(0, 0, 0, 0.12);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeUp 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ── Icon ── */
+        .icon-wrap {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #f0f4ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 16px rgba(21, 101, 192, 0.15);
+        }
+
+        .icon-wrap svg {
+            width: 40px;
+            height: 40px;
+        }
+
+        /* ── Title ── */
+        .app-title {
+            font-size: 28px;
+            font-weight: 800;
+            color: #1565C0;
+            letter-spacing: 0.5px;
+            text-align: center;
+            line-height: 1.1;
+            margin-bottom: 6px;
+        }
+
+        .app-subtitle {
+            font-size: 13px;
+            color: #78909C;
+            font-weight: 400;
+            text-align: center;
+            margin-bottom: 32px;
+            letter-spacing: 0.2px;
+        }
+
+        /* ── Form ── */
+        .form-group {
+            width: 100%;
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #37474F;
+            margin-bottom: 7px;
+        }
+
+        .input-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrap .input-icon {
+            position: absolute;
+            left: 14px;
+            display: flex;
+            align-items: center;
+            pointer-events: none;
+            color: #90A4AE;
+        }
+
+        .input-wrap .input-icon svg {
+            width: 17px;
+            height: 17px;
+        }
+
+        .input-wrap input {
+            width: 100%;
+            border: 1.5px solid #CFD8DC;
+            border-radius: 10px;
+            padding: 12px 14px 12px 42px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            color: #263238;
+            background: #FAFBFC;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .input-wrap input::placeholder {
+            color: #B0BEC5;
+            font-weight: 400;
+        }
+
+        .input-wrap input:focus {
+            border-color: #1565C0;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(21, 101, 192, 0.12);
+        }
+
+        .toggle-pass {
+            position: absolute;
+            right: 13px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #90A4AE;
+            display: flex;
+            align-items: center;
+            padding: 3px;
+            transition: color 0.2s;
+        }
+
+        .toggle-pass:hover {
+            color: #1565C0;
+        }
+
+        .toggle-pass svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* error */
+        .error-msg {
+            font-size: 11.5px;
+            color: #E53935;
+            margin-top: 6px;
+            display: none;
+            padding-left: 2px;
+            font-weight: 500;
+        }
+
+        .error-msg.show {
+            display: block;
+        }
+
+        .shake {
+            animation: shake 0.4s ease;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            20% {
+                transform: translateX(-7px);
+            }
+
+            40% {
+                transform: translateX(7px);
+            }
+
+            60% {
+                transform: translateX(-4px);
+            }
+
+            80% {
+                transform: translateX(4px);
+            }
+        }
+
+        /* ── Button ── */
+        .btn-login {
+            width: 100%;
+            border: none;
+            border-radius: 10px;
+            padding: 14px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            color: #fff;
+            background: linear-gradient(135deg, #1565C0 0%, #1E88E5 100%);
+            cursor: pointer;
+            margin-top: 8px;
+            margin-bottom: 20px;
+            transition: transform 0.15s, box-shadow 0.2s;
+            box-shadow: 0 6px 20px rgba(21, 101, 192, 0.40);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 28px rgba(21, 101, 192, 0.50);
+        }
+
+        .btn-login:active {
+            transform: scale(0.98);
+        }
+
+        .btn-login.loading {
+            pointer-events: none;
+            opacity: 0.82;
+        }
+
+        /* spinner */
+        .spinner {
+            width: 17px;
+            height: 17px;
+            border: 2.5px solid rgba(255, 255, 255, 0.35);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            display: none;
+            flex-shrink: 0;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* divider */
+        .divider-line {
+            width: 100%;
+            height: 1px;
+            background: #ECEFF1;
+            margin-bottom: 16px;
+        }
+
+        /* demo hint */
+        .demo-hint {
+            font-size: 12.5px;
+            color: #90A4AE;
+            text-align: center;
+        }
+
+        .demo-hint strong {
+            color: #546E7A;
+            font-weight: 600;
+        }
+
+        /* ── Success Overlay ── */
+        .success-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background: rgba(13, 74, 150, 0.92);
+            backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s;
+        }
+
+        .success-overlay.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00C6FF, #0072ff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 50px rgba(0, 198, 255, 0.55);
+            animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes popIn {
+            from {
+                transform: scale(0);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-icon svg {
+            width: 40px;
+            height: 40px;
+        }
+
+        .success-msg {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .success-sub {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 36px 24px 28px;
+                border-radius: 16px;
+            }
+
+            .app-title {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Background -->
+    <div class="bg">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 860" preserveAspectRatio="xMidYMax slice"
+            style="position:absolute;bottom:0;left:0;width:100%;height:100%;opacity:0.50;">
+            <defs>
+                <linearGradient id="tg" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#08245c" stop-opacity="0.92" />
+                    <stop offset="100%" stop-color="#040e2a" stop-opacity="0.96" />
+                </linearGradient>
+            </defs>
+            <!-- Ground -->
+            <rect x="0" y="808" width="1440" height="52" fill="#0a1e40" opacity="0.55" />
+
+            <!-- Tower 1 – far left -->
+            <g fill="url(#tg)">
+                <polygon points="155,810 170,315 181,315 196,810" />
+                <rect x="125" y="558" width="122" height="7" rx="3" />
+                <rect x="135" y="474" width="102" height="6" rx="3" />
+                <rect x="143" y="410" width="86" height="5" rx="2" />
+                <polygon points="162,543 192,543 218,563 137,563" />
+                <polygon points="165,463 189,463 208,479 148,479" />
+                <polygon points="167,403 188,403 204,415 153,415" />
+                <rect x="175" y="276" width="5" height="41" rx="2" />
+                <polygon points="172,276 183,276 177.5,255" />
+            </g>
+            <!-- wires T1 -->
+            <path d="M125 566 Q440 640 510 628" stroke="#163a72" stroke-width="1.8" fill="none" opacity="0.75" />
+            <path d="M247 566 Q450 638 510 626" stroke="#163a72" stroke-width="1.5" fill="none" opacity="0.60" />
+
+            <!-- Tower 2 – centre-left, tallest -->
+            <g fill="url(#tg)">
+                <polygon points="485,810 502,172 515,172 532,810" />
+                <rect x="448" y="644" width="124" height="9" rx="3" />
+                <rect x="458" y="538" width="104" height="8" rx="3" />
+                <rect x="465" y="456" width="90" height="7" rx="3" />
+                <rect x="472" y="392" width="76" height="6" rx="2" />
+                <polygon points="489,628 525,628 564,648 449,648" />
+                <polygon points="492,523 522,523 554,543 462,543" />
+                <polygon points="494,443 521,443 548,461 468,461" />
+                <polygon points="496,382 520,382 540,396 476,396" />
+                <rect x="506" y="128" width="5" height="46" rx="2" />
+                <polygon points="502,128 514,128 508,105" />
+            </g>
+            <!-- wires T2 -->
+            <path d="M448 652 Q700 700 958 668" stroke="#163a72" stroke-width="2.2" fill="none" opacity="0.70" />
+            <path d="M572 652 Q716 696 958 666" stroke="#163a72" stroke-width="1.8" fill="none" opacity="0.55" />
+
+            <!-- Tower 3 – right -->
+            <g fill="url(#tg)">
+                <polygon points="958,810 973,255 985,255 1000,810" />
+                <rect x="926" y="624" width="106" height="9" rx="3" />
+                <rect x="932" y="530" width="94" height="8" rx="3" />
+                <rect x="938" y="456" width="82" height="7" rx="3" />
+                <rect x="944" y="396" width="68" height="6" rx="2" />
+                <polygon points="960,608 992,608 1022,628 928,628" />
+                <polygon points="963,516 991,516 1018,534 934,534" />
+                <polygon points="965,445 990,445 1014,461 940,461" />
+                <polygon points="967,390 990,390 1008,403 946,403" />
+                <rect x="975" y="216" width="5" height="41" rx="2" />
+                <polygon points="972,216 983,216 977.5,196" />
+            </g>
+            <!-- wires T2→T3 -->
+            <path d="M572 652 Q765 712 926 628" stroke="#163a72" stroke-width="2" fill="none" opacity="0.65" />
+            <!-- wires T3 right -->
+            <path d="M928 632 Q1180 678 1390 648" stroke="#163a72" stroke-width="1.9" fill="none" opacity="0.62" />
+            <path d="M1032 632 Q1195 674 1390 646" stroke="#163a72" stroke-width="1.6" fill="none" opacity="0.48" />
+
+            <!-- Tower 4 – far right -->
+            <g fill="url(#tg)">
+                <polygon points="1310,810 1322,342 1332,342 1344,810" />
+                <rect x="1288" y="636" width="96" height="8" rx="3" />
+                <rect x="1294" y="553" width="84" height="7" rx="3" />
+                <polygon points="1314,622 1340,622 1364,641 1290,641" />
+                <polygon points="1317,540 1341,540 1362,558 1296,558" />
+                <rect x="1325" y="308" width="5" height="36" rx="2" />
+                <polygon points="1322,308 1333,308 1327.5,288" />
+            </g>
+        </svg>
+    </div>
+
+    <!-- Login Card -->
+    <div class="card-wrap">
+        <div class="card">
+
+            <!-- Icon -->
+            <div class="icon-wrap">
+                <!-- Lightning bolt SVG -->
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="12" fill="#F3F6FF" />
+                    <path d="M13.5 3L5.5 13.5H12L10.5 21L18.5 10.5H12L13.5 3Z" fill="#F9A825" stroke="#F57F17"
+                        stroke-width="0.5" stroke-linejoin="round" />
+                </svg>
+            </div>
+
+            <!-- Title -->
+            <div class="app-title">MANDORLINE</div>
+            <div class="app-subtitle">System Patroli &amp; Pelaporan Digital</div>
+
+            <!-- Username -->
+            <div class="form-group" style="margin-bottom:16px;">
+                <label for="username">Username</label>
+                <div class="input-wrap" id="wrapUser">
+                    <span class="input-icon">
+                        <!-- person icon -->
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
+                        </svg>
+                    </span>
+                    <input type="text" id="username" placeholder="Masukkan username" autocomplete="off" />
+                </div>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="input-wrap" id="wrapPass">
+                    <span class="input-icon">
+                        <!-- lock icon -->
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                        </svg>
+                    </span>
+                    <input type="password" id="password" placeholder="Masukkan password" autocomplete="off" />
+                    <button class="toggle-pass" id="togglePass" tabindex="-1" aria-label="Tampilkan password">
+                        <svg id="eyeOpen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" style="display:none">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                            <circle cx="12" cy="12" r="3" />
+                        </svg>
+                        <svg id="eyeClosed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                            <line x1="1" y1="1" x2="23" y2="23" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="error-msg" id="errorMsg">⚠ Username atau password salah!</div>
+            </div>
+
+            <!-- Submit Button -->
+            <button class="btn-login" id="btnLogin">
+                <div class="spinner" id="spinner"></div>
+                <span id="btnText">MULAI PATROLI</span>
+            </button>
+
+            <!-- Divider -->
+            <div class="divider-line"></div>
+
+            <!-- Demo hint -->
+            <div class="demo-hint">Demo: <strong>admin</strong> / <strong>admin</strong></div>
+
+            <!-- History link -->
+            <a href="reports.html"
+                class="mt-4 text-[11px] font-bold text-blue-600 uppercase tracking-widest hover:underline">Lihat Hasil
+                Laporan</a>
+
+        </div>
+    </div>
+
+    <!-- Success Overlay -->
+    <div class="success-overlay" id="successOverlay">
+        <div class="success-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"
+                stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+            </svg>
+        </div>
+        <div class="success-msg">Login Berhasil!</div>
+        <div class="success-sub">Mengarahkan ke Halaman Patroli…</div>
+    </div>
+
+    <script>
+        /* ── Toggle Password ── */
+        const passInput = document.getElementById('password');
+        const eyeOpen = document.getElementById('eyeOpen');
+        const eyeClosed = document.getElementById('eyeClosed');
+        document.getElementById('togglePass').addEventListener('click', () => {
+            const show = passInput.type === 'password';
+            passInput.type = show ? 'text' : 'password';
+            eyeOpen.style.display = show ? 'block' : 'none';
+            eyeClosed.style.display = show ? 'none' : 'block';
+        });
+
+        /* ── Login ── */
+        const btnLogin = document.getElementById('btnLogin');
+        const spinner = document.getElementById('spinner');
+        const btnText = document.getElementById('btnText');
+        const errorMsg = document.getElementById('errorMsg');
+        const wrapUser = document.getElementById('wrapUser');
+        const wrapPass = document.getElementById('wrapPass');
+        const successOverlay = document.getElementById('successOverlay');
+
+        function doLogin() {
+            const user = document.getElementById('username').value.trim();
+            const pass = document.getElementById('password').value;
+            errorMsg.classList.remove('show');
+
+            if (user === 'admin' && pass === 'admin') {
+                // loading
+                spinner.style.display = 'block';
+                btnText.textContent = 'Memverifikasi…';
+                btnLogin.classList.add('loading');
+
+                setTimeout(() => successOverlay.classList.add('show'), 1100);
+                setTimeout(() => {
+                    sessionStorage.setItem('mandorline_auth', 'true');
+                    window.location.href = 'patroli-step1.html';
+                }, 2000);
+
+            } else {
+                errorMsg.classList.add('show');
+                [wrapUser, wrapPass].forEach(el => {
+                    el.classList.remove('shake');
+                    void el.offsetWidth;
+                    el.classList.add('shake');
+                    setTimeout(() => el.classList.remove('shake'), 450);
+                });
+            }
+        }
+
+        btnLogin.addEventListener('click', doLogin);
+        ['username', 'password'].forEach(id =>
+            document.getElementById(id).addEventListener('keydown', e => {
+                if (e.key === 'Enter') doLogin();
+            })
+        );
+        ['username', 'password'].forEach(id =>
+            document.getElementById(id).addEventListener('input', () =>
+                errorMsg.classList.remove('show')
+            )
+        );
+    </script>
+</body>
+
+</html>

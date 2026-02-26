@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1565C0",
+                        "secondary": "#0f4c81",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#221610",
+                    },
+                    fontFamily: { "display": ["Public Sans"] },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <title>Patroli Mandor Line Penyulang - Step 1</title>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-background-light dark:bg-background-dark border-b border-primary/10 px-4 py-4">
+        <div class="flex items-center justify-between max-w-md mx-auto">
+            <button
+                onclick="if(confirm('Keluar dari aplikasi?')){sessionStorage.clear(); window.location.href='index.html';}"
+                class="p-2 -ml-2 text-primary hover:bg-primary/10 rounded-full transition-colors">
+                <span class="material-symbols-outlined">logout</span>
+            </button>
+            <h1 class="text-sm font-bold uppercase tracking-wider text-center flex-1 truncate px-2">
+                PATROLI MANDOR LINE
+            </h1>
+            <div class="w-10"></div>
+        </div>
+    </header>
+
+    <main class="max-w-md mx-auto p-4 pb-24">
+
+        <!-- Progress -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-semibold uppercase text-secondary tracking-widest">Progress</span>
+                <span class="text-xs font-bold text-slate-500 dark:text-slate-400">1 of 3</span>
+            </div>
+            <div class="flex w-full gap-2">
+                <div class="h-1.5 flex-1 rounded-full bg-primary"></div>
+                <div class="h-1.5 flex-1 rounded-full bg-slate-200 dark:bg-slate-700"></div>
+                <div class="h-1.5 flex-1 rounded-full bg-slate-200 dark:bg-slate-700"></div>
+            </div>
+            <h2 class="mt-6 text-xl font-bold">Step 1: Data Utama Patroli</h2>
+            <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Isi informasi dasar terkait patroli penyulang.
+            </p>
+        </div>
+
+        <!-- Form Fields -->
+        <div class="space-y-6">
+
+            <!-- No Kondisi -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">No Kondisi</label>
+                <div
+                    class="flex items-center h-14 bg-slate-100 dark:bg-slate-800/50 border-2 border-slate-200 dark:border-slate-700 rounded-xl px-4 text-slate-600 dark:text-slate-400">
+                    <span class="material-symbols-outlined mr-3 text-secondary/60">confirmation_number</span>
+                    <span class="text-base font-mono" id="noKondisi">HAR260226.001</span>
+                </div>
+            </div>
+
+            <!-- Nama Petugas -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Nama Petugas</label>
+                <div class="relative">
+                    <input id="namaPetugas"
+                        class="w-full h-14 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-xl px-4 pr-12 focus:border-primary focus:ring-0 transition-all outline-none uppercase placeholder:normal-case"
+                        type="text" oninput="this.value=this.value.toUpperCase()" />
+                    <span class="material-symbols-outlined absolute right-4 top-4 text-slate-400">person</span>
+                </div>
+            </div>
+
+            <!-- Tanggal & Waktu -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Tanggal &amp; Waktu
+                    Patroli</label>
+                <div
+                    class="flex items-center h-14 bg-slate-100 dark:bg-slate-800/50 border-2 border-slate-200 dark:border-slate-700 rounded-xl px-4 text-slate-600 dark:text-slate-400">
+                    <span class="material-symbols-outlined mr-3 text-secondary/60">schedule</span>
+                    <span class="text-base" id="waktuPatroli">—</span>
+                </div>
+            </div>
+
+            <!-- Penyulang -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Penyulang</label>
+                <div class="relative">
+                    <select id="penyulang"
+                        class="w-full h-14 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-xl px-4 appearance-none focus:border-primary focus:ring-0 transition-all outline-none">
+                        <option disabled selected value="">Pilih Penyulang</option>
+                        <option value="BTJR">BTJR</option>
+                        <option value="CKLW">CKLW</option>
+                        <option value="CKRH">CKRH</option>
+                        <option value="GLNG">GLNG</option>
+                        <option value="LBSR">LBSR</option>
+                        <option value="MWTI">MWTI</option>
+                        <option value="PGP">PGP</option>
+                        <option value="PSLU">PSLU</option>
+                        <option value="PRBY">PRBY</option>
+                        <option value="PTB">PTB</option>
+                        <option value="RJDL">RJDL</option>
+                        <option value="SLCU">SLCU</option>
+                    </select>
+                    <span
+                        class="material-symbols-outlined absolute right-4 top-4 text-slate-400 pointer-events-none">expand_more</span>
+                </div>
+            </div>
+
+            <!-- Kondisi Cuaca -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Kondisi Cuaca</label>
+                <div class="grid grid-cols-3 gap-3">
+                    <button type="button" onclick="selectWeather('cerah', this)"
+                        class="weather-btn flex flex-col items-center justify-center p-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 transition-all hover:border-primary/50">
+                        <span class="text-2xl mb-1">☀️</span>
+                        <span class="text-xs font-semibold text-slate-600 dark:text-slate-400">Cerah</span>
+                    </button>
+                    <button type="button" onclick="selectWeather('mendung', this)"
+                        class="weather-btn flex flex-col items-center justify-center p-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 transition-all hover:border-primary/50">
+                        <span class="text-2xl mb-1">🌤️</span>
+                        <span class="text-xs font-semibold text-slate-600 dark:text-slate-400">Mendung</span>
+                    </button>
+                    <button type="button" onclick="selectWeather('hujan', this)"
+                        class="weather-btn flex flex-col items-center justify-center p-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 transition-all hover:border-primary/50">
+                        <span class="text-2xl mb-1">🌧️</span>
+                        <span class="text-xs font-semibold text-slate-600 dark:text-slate-400">Hujan</span>
+                    </button>
+                </div>
+                <input type="hidden" id="selectedWeather" value="" />
+            </div>
+
+            <style>
+                .weather-btn.active {
+                    border-color: #1565C0;
+                    background-color: rgba(21, 101, 192, 0.05);
+                    box-shadow: 0 4px 12px rgba(21, 101, 192, 0.1);
+                }
+
+                .weather-btn.active span:last-child {
+                    color: #1565C0;
+                }
+            </style>
+
+            <script>
+                function selectWeather(val, btn) {
+                    document.getElementById('selectedWeather').value = val;
+                    document.querySelectorAll('.weather-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                }
+            </script>
+
+            <!-- Segmen / Section -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Segmen / Section</label>
+                <div class="relative">
+                    <input id="segmen"
+                        class="w-full h-14 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-xl px-4 pr-12 focus:border-primary focus:ring-0 transition-all outline-none"
+                        type="text" />
+                    <span class="material-symbols-outlined absolute right-4 top-4 text-slate-400">segment</span>
+                </div>
+            </div>
+
+        </div><!-- /space-y-6 -->
+    </main>
+
+    <!-- Footer Button -->
+    <div
+        class="fixed bottom-0 left-0 right-0 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md p-4 border-t border-primary/10">
+        <div class="max-w-md mx-auto flex items-center justify-between">
+            <!-- Space on left to balance -->
+            <div class="w-20"></div>
+
+            <!-- Report Button (Middle) -->
+            <button onclick="window.location.href='reports.html'"
+                class="flex flex-col items-center gap-1 text-slate-400 hover:text-primary transition-colors">
+                <span class="material-symbols-outlined text-2xl">assignment</span>
+                <span class="text-[10px] font-bold uppercase tracking-widest">Report</span>
+            </button>
+
+            <!-- Next Button (Right) -->
+            <button id="btnNext" onclick="nextStep()"
+                class="w-20 h-10 bg-primary hover:bg-primary/90 text-white font-bold rounded-xl shadow-lg shadow-primary/30 flex items-center justify-center transition-transform active:scale-95 text-xs uppercase">
+                <span>Next</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        /* ── Auth Guard ── */
+        if (!sessionStorage.getItem('mandorline_auth')) {
+            window.location.href = 'index.html';
+        }
+
+        /* ── Live Date/Time ── */
+        function updateWaktu() {
+            const now = new Date();
+            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+            const d = now.getDate();
+            const mo = months[now.getMonth()];
+            const y = now.getFullYear();
+            const h = String(now.getHours()).padStart(2, '0');
+            const m = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('waktuPatroli').textContent =
+                `${d} ${mo} ${y}, ${h}:${m} WIB`;
+        }
+        updateWaktu();
+        setInterval(updateWaktu, 30000);
+
+        /* ── No Kondisi Auto (Sync with Database Live) ── */
+        async function syncNoKondisi() {
+            const noKondisiEl = document.getElementById('noKondisi');
+            const toast = (msg, color = 'blue') => {
+                const t = document.createElement('div');
+                t.className = `fixed top-24 left-1/2 -translate-x-1/2 bg-${color === 'red' ? 'red-600' : 'blue-600'} text-white px-6 py-3 rounded-2xl text-[10px] font-black z-[100] shadow-2xl animate-bounce border-2 border-white/20`;
+                t.innerText = msg;
+                document.body.appendChild(t);
+                setTimeout(() => t.remove(), 3000);
+            };
+
+            noKondisiEl.innerHTML = '<span class="animate-pulse text-[10px] text-blue-500 font-bold uppercase tracking-widest">🔄 Menghubungkan...</span>';
+
+            const URL1 = 'https://script.google.com/macros/s/AKfycbxkmCbtd8jWmVGZ2MAIo9mUKrnxfZsuS4X07D7wM3-2vkQhLQbyJX5rnJNz3l80d_aNuA/exec';
+            const URL2 = 'https://script.google.com/macros/s/AKfycbyP51OxeWQTU02m8n1wSAuVGXS5auxK7o-AJGYqUgorZ9ZpInUgqlM22ikiTESBXg7J8g/exec';
+
+            const now = new Date();
+            const dd = String(now.getDate()).padStart(2, '0');
+            const mm = String(now.getMonth() + 1).padStart(2, '0');
+            const yy = String(now.getFullYear()).slice(2);
+            const todayPrefix = `HAR${dd}${mm}${yy}`;
+
+            async function pullData() {
+                const targets = [URL1, URL2];
+                const proxies = [
+                    (u) => `${u}?t=${Date.now()}`,
+                    (u) => `https://api.allorigins.win/get?v=${Date.now()}&url=${encodeURIComponent(u + '?t=' + Date.now())}`,
+                    (u) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u + '?t=' + Date.now())}`
+                ];
+
+                for (let target of targets) {
+                    for (let getProxy of proxies) {
+                        try {
+                            const r = await fetch(getProxy(target));
+                            let j = await r.json();
+                            if (j && j.contents) j = JSON.parse(j.contents);
+                            if (j) return j;
+                        } catch (e) { }
+                    }
+                }
+                throw new Error("offline");
+            }
+
+            try {
+                const rawData = await pullData();
+                let list = [];
+
+                // JURUS PAMUNGKAS BRUTE FORCE: Cari List Data
+                if (Array.isArray(rawData)) {
+                    list = rawData;
+                } else {
+                    for (let key in rawData) {
+                        if (Array.isArray(rawData[key])) {
+                            list = rawData[key];
+                            break;
+                        }
+                    }
+                }
+
+                let maxSeq = 0;
+                let foundToday = 0;
+
+                // SCAN TIAP BARIS: Cari pola HAR270226.001 manapun
+                list.forEach(item => {
+                    if (!item) return;
+                    const allVals = Object.values(item).map(v => v?.toString() || "");
+                    for (let s of allVals) {
+                        const cleanS = s.trim().toUpperCase();
+                        if (cleanS.includes('HAR') && cleanS.includes('.')) {
+                            if (cleanS.includes(todayPrefix)) {
+                                foundToday++;
+                                const parts = cleanS.split('.');
+                                const num = parseInt(parts[parts.length - 1].replace(/\D/g, ''));
+                                if (!isNaN(num) && num > maxSeq) maxSeq = num;
+                            }
+                        }
+                    }
+                });
+
+                // Debug Helper & Force Alert
+                let cCount = 0;
+                const h3El = document.querySelector('h3') || document.body;
+                h3El.onclick = () => {
+                    cCount++;
+                    if (cCount >= 5) {
+                        alert(`DEBUG:\nTotal: ${list.length}\nToday: ${foundToday}\nLast: ${maxSeq}\nPre: ${todayPrefix}`);
+                        cCount = 0;
+                    }
+                };
+
+                const finalNo = `${todayPrefix}.${String(maxSeq + 1).padStart(3, '0')}`;
+                if (foundToday > 0) {
+                    toast(`✅ SINKRON OK! Nomor Terakhir: .${String(maxSeq).padStart(3, '0')}`, 'blue');
+                } else {
+                    toast(`📡 DATABASE BERSIH / HARI BARU`, 'blue');
+                }
+
+                noKondisiEl.innerHTML = `
+                    <div class="flex items-center justify-between w-full">
+                        <div class="flex items-center gap-2">
+                            <span class="text-base font-mono font-black text-slate-800">${finalNo}</span>
+                            <span class="bg-blue-600 text-[8px] text-white px-1.5 py-0.5 rounded font-black uppercase shadow-sm">Live</span>
+                        </div>
+                        <button onclick="syncNoKondisi()" class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600 active:rotate-180 transition-all">
+                            <span class="material-symbols-outlined text-sm">sync</span>
+                        </button>
+                    </div>
+                `;
+                localStorage.setItem('mandor_date', dd + mm + yy);
+                localStorage.setItem('mandor_counter', (maxSeq + 1).toString());
+            } catch (err) {
+                toast("Gagal Sinkron. Periksa Internet.", "red");
+                let c = localStorage.getItem('mandor_counter') || '1';
+                if (localStorage.getItem('mandor_date') !== dd + mm + yy) c = '1';
+                noKondisiEl.innerHTML = `
+                    <div class="flex items-center justify-between w-full opacity-60">
+                        <div class="flex items-center gap-2">
+                            <span class="text-base font-mono font-bold">${todayPrefix}.${String(c).padStart(3, '0')}</span>
+                            <span class="bg-slate-400 text-[8px] text-white px-1.5 py-0.5 rounded font-black uppercase">Offline</span>
+                        </div>
+                        <button onclick="syncNoKondisi()" class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 active:rotate-180 transition-all">
+                            <span class="material-symbols-outlined text-sm">sync</span>
+                        </button>
+                    </div>
+                `;
+            }
+        }
+        syncNoKondisi();
+
+
+
+        /* ── Validation & Next ── */
+        function nextStep() {
+            const noKondisiBox = document.getElementById('noKondisi');
+            // Pastikan mengambil nomor asli, bukan teks lencana atau tombol
+            const noKondisiText = noKondisiBox.querySelector('.font-mono')?.innerText || noKondisiBox.innerText.split('\n')[0].trim();
+
+            const nama = document.getElementById('namaPetugas').value.trim();
+            const penyulang = document.getElementById('penyulang').value;
+            const weather = document.getElementById('selectedWeather').value;
+            const segmen = document.getElementById('segmen').value.trim();
+
+            if (!nama || !penyulang || !weather || !segmen) {
+                alert('⚠ Mohon lengkapi semua data step 1!');
+                return;
+            }
+
+            sessionStorage.setItem('step1_noKondisi', noKondisiText.trim());
+            sessionStorage.setItem('step1_nama', nama);
+            sessionStorage.setItem('step1_waktu', document.getElementById('waktuPatroli').textContent);
+            sessionStorage.setItem('step1_penyulang', penyulang);
+            sessionStorage.setItem('step1_weather', weather);
+            sessionStorage.setItem('step1_segmen', segmen);
+
+            window.location.href = 'patroli-step2.html';
+        }
+    </script>
+</body>
+
+</html>
