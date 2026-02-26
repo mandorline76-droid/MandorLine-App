@@ -41,14 +41,13 @@
         class="relative flex min-h-screen w-full flex-col overflow-x-hidden max-w-md mx-auto shadow-2xl bg-background-light dark:bg-background-dark">
 
         <!-- Header -->
-        <header
-            class="sticky top-0 z-50 bg-background-light dark:bg-background-dark border-b border-primary/10 px-4 py-4">
+        <header class="sticky top-0 z-50 bg-primary border-b border-white/10 shadow-lg px-4 py-4">
             <div class="flex items-center justify-between max-w-md mx-auto">
                 <button onclick="history.back()"
-                    class="p-2 -ml-2 text-primary hover:bg-primary/10 rounded-full transition-colors">
+                    class="p-2 -ml-2 text-white hover:bg-white/10 rounded-full transition-colors">
                     <span class="material-symbols-outlined">arrow_back</span>
                 </button>
-                <h1 class="text-sm font-bold uppercase tracking-wider text-center flex-1 truncate px-2">
+                <h1 class="text-sm font-bold uppercase tracking-wider text-center flex-1 truncate px-2 text-white">
                     PATROLI MANDOR LINE
                 </h1>
                 <div class="w-10"></div>
@@ -57,20 +56,15 @@
             <!-- Step Indicator -->
             <div class="flex flex-col items-center pb-0 mt-2">
                 <div class="flex w-full flex-row items-center justify-center gap-3 py-3">
-                    <div class="h-2 w-8 rounded-full bg-primary/30"></div>
-                    <div class="h-2 w-8 rounded-full bg-primary/30"></div>
-                    <div class="h-2 w-8 rounded-full bg-primary"></div>
+                    <div class="h-2 w-8 rounded-full bg-white/30"></div>
+                    <div class="h-2 w-8 rounded-full bg-white/30"></div>
+                    <div class="h-2 w-8 rounded-full bg-white"></div>
                 </div>
-                <p class="text-primary text-xs font-bold uppercase tracking-widest">Step 3: Tindak Lanjut</p>
+                <p class="text-white text-xs font-bold uppercase tracking-widest">Step 3: Tindak Lanjut</p>
             </div>
         </header>
 
         <main class="flex-1 overflow-y-auto px-4 py-4 space-y-6 pb-48">
-            <div class="mb-4">
-                <h2 class="text-xl font-bold">Data Penanganan</h2>
-                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Lengkapi detail penanganan temuan patroli.
-                </p>
-            </div>
 
             <div class="space-y-6">
                 <!-- Dropdown: Prioritas -->
@@ -176,7 +170,7 @@
                     <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Pelaksana</label>
                     <div class="relative">
                         <input id="pelaksana"
-                            class="w-full h-14 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-xl pl-12 pr-4 focus:border-primary focus:ring-0 transition-all outline-none text-slate-900 dark:text-slate-100 uppercase"
+                            class="w-full h-14 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-xl pl-12 pr-4 focus:border-primary focus:ring-0 transition-all outline-none text-primary font-bold uppercase"
                             type="text" oninput="this.value=this.value.toUpperCase()" />
                         <span class="material-symbols-outlined absolute left-4 top-4 text-slate-400">person</span>
                     </div>

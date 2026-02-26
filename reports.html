@@ -87,54 +87,28 @@
     <div class="max-w-md mx-auto min-h-screen bg-[#f1f5f9] relative pb-28 shadow-2xl">
 
         <!-- Top Brand Bar -->
-        <div
-            class="bg-[#1565C0] px-6 py-6 flex items-center justify-between sticky top-0 z-40 shadow-xl border-b border-white/10">
-            <div class="flex items-center gap-5">
-                <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center p-2 shadow-lg">
-                    <img src="logo.png" class="w-12 h-12 object-contain">
-                </div>
-                <div>
-                    <span class="text-white font-black text-2xl tracking-tighter block leading-none">MandorLine</span>
-                    <span class="text-[10px] text-white/50 uppercase font-black tracking-[0.2em] mt-1.5 block">Digital
-                        Patrol</span>
-                </div>
-            </div>
-            <div class="flex items-center gap-2">
-                <div
-                    class="w-12 h-12 rounded-full bg-white/10 border border-white/20 flex items-center justify-center overflow-hidden active:scale-90 transition-all">
-                    <span class="material-symbols-outlined text-white text-2xl">person</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Header -->
-        <header class="p-6 bg-white/80 backdrop-blur-md border-b border-slate-100 flex items-center justify-between">
-            <div class="flex items-center gap-3">
+        <div class="bg-[#1565C0] border-b border-white/10 sticky top-0 z-40 shadow-xl">
+            <div class="flex items-center p-4 pb-2 justify-between max-w-md mx-auto">
                 <button onclick="window.location.href='patroli-step1.html'"
-                    class="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-500 active:scale-95 transition-all">
+                    class="text-white flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-white/10 transition-colors">
                     <span class="material-symbols-outlined">arrow_back</span>
                 </button>
-                <div>
-                    <h1 class="text-lg font-black text-slate-900 leading-none">Database Laporan</h1>
-                    <p class="text-[9px] uppercase font-bold text-blue-600 tracking-wider mt-1">Sistem MandorLine</p>
+                <h2 class="text-white text-lg font-bold uppercase tracking-wider flex-1 text-center px-2">
+                    REKAP TEMUAN HARIAN
+                </h2>
+                <div class="flex items-center gap-1">
+                    <button onclick="previewAll()"
+                        class="text-white flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-white/10 transition-colors">
+                        <span class="material-symbols-outlined">picture_as_pdf</span>
+                    </button>
+                    <button onclick="fetchData()"
+                        class="text-white flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-white/10 transition-colors">
+                        <span class="material-symbols-outlined">sync</span>
+                    </button>
                 </div>
             </div>
-            <button onclick="fetchData()"
-                class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 active:rotate-180 transition-all">
-                <span class="material-symbols-outlined text-xl">sync</span>
-            </button>
-        </header>
-
-        <!-- Dynamic Counter -->
-        <div class="px-6 mt-6 flex gap-3">
-            <div class="flex-1 bg-white p-5 rounded-[2.5rem] shadow-sm border border-slate-100">
-                <p class="text-[8px] uppercase font-bold text-slate-400 tracking-widest">Total Laporan</p>
-                <h3 class="text-3xl font-black text-slate-800" id="statTotal">0</h3>
-            </div>
-            <div class="flex-1 bg-blue-600 p-5 rounded-[2.5rem] shadow-xl shadow-blue-200 text-white">
-                <p class="text-[8px] uppercase font-bold text-white/60 tracking-widest">Penyulang</p>
-                <h3 class="text-3xl font-black" id="statPenyulang">0</h3>
-            </div>
+            <!-- Spacer to match step indicator height -->
+            <div class="pb-8"></div>
         </div>
 
         <!-- Smart Search & Filter -->
@@ -150,27 +124,48 @@
             </div>
 
             <div class="flex gap-2 overflow-x-auto no-scrollbar py-1">
-                <select id="filterPenyulang" onchange="applyFilters()"
-                    class="h-10 px-4 bg-white border border-slate-100 rounded-full text-[10px] font-black uppercase text-slate-500 shadow-sm focus:ring-2 focus:ring-blue-500 outline-none min-w-[120px]">
-                    <option value="all">Semua Penyulang</option>
-                </select>
-                <div id="quickStatus" class="flex gap-2">
+                <div id="quickStatus" class="flex gap-2 w-full">
                     <button onclick="setQuickStatus('all')"
-                        class="status-btn active px-4 py-2 rounded-full border border-slate-100 bg-white text-[10px] font-black uppercase shadow-sm transition-all whitespace-nowrap">Semua</button>
+                        class="status-btn active px-5 py-2.5 rounded-full border border-red-600 bg-red-600 text-white text-[10px] font-black uppercase shadow-sm transition-all whitespace-nowrap">Semua</button>
                     <button onclick="setQuickStatus('open')"
-                        class="status-btn px-4 py-2 rounded-full border border-slate-100 bg-white text-[10px] font-black uppercase shadow-sm transition-all whitespace-nowrap">Open</button>
+                        class="status-btn px-5 py-2.5 rounded-full border border-slate-100 bg-white text-slate-500 text-[10px] font-black uppercase shadow-sm transition-all whitespace-nowrap">Open</button>
+                    <button onclick="setQuickStatus('progress')"
+                        class="status-btn px-5 py-2.5 rounded-full border border-slate-100 bg-white text-slate-500 text-[10px] font-black uppercase shadow-sm transition-all whitespace-nowrap">Progress</button>
                     <button onclick="setQuickStatus('closed')"
-                        class="status-btn px-4 py-2 rounded-full border border-slate-100 bg-white text-[10px] font-black uppercase shadow-sm transition-all whitespace-nowrap">Selesai</button>
+                        class="status-btn px-5 py-2.5 rounded-full border border-slate-100 bg-white text-slate-500 text-[10px] font-black uppercase shadow-sm transition-all whitespace-nowrap">Closed</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats Card -->
+        <div class="px-6 mt-6 grid grid-cols-2 gap-4">
+            <div
+                class="bg-white p-5 rounded-[2rem] shadow-sm border border-slate-50 flex items-center gap-4 transition-all hover:shadow-md">
+                <div
+                    class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 shadow-inner">
+                    <span class="material-symbols-outlined text-2xl">assignment</span>
+                </div>
+                <div>
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Total</p>
+                    <p class="text-sm font-black text-slate-800" id="statTotal">0</p>
+                </div>
+            </div>
+            <div
+                class="bg-white p-5 rounded-[2rem] shadow-sm border border-slate-50 flex items-center gap-4 transition-all hover:shadow-md">
+                <div
+                    class="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600 shadow-inner">
+                    <span class="material-symbols-outlined text-2xl">account_tree</span>
+                </div>
+                <div>
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Penyulang</p>
+                    <p class="text-sm font-black text-slate-800" id="statPenyulang">0</p>
                 </div>
             </div>
         </div>
 
         <!-- Compact Zebra List -->
-        <section class="mt-8 px-6">
-            <div class="flex items-center justify-between mb-4 px-2">
-                <h2 class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Daftar Laporan Terkini</h2>
-                <div id="dataCount" class="text-[9px] font-black text-blue-600 px-2 py-0.5 rounded-lg">0 Data</div>
-            </div>
+        <section class="mt-8 px-6 pb-4">
+            <!-- Header dihapus sesuai permintaan -->
 
             <div id="loading" class="space-y-3">
                 <div class="h-16 w-full rounded-2xl shimmer"></div>
@@ -368,21 +363,28 @@
                 }
             };
 
-            // Setup Dropdown Penyulang
-            const penyulangList = [...new Set(allData.map(d => getV(d, 'penyulang')))].filter(p => p && p !== "-").sort();
-            const select = document.getElementById('filterPenyulang');
-            select.innerHTML = '<option value="all">Semua Penyulang</option>';
-            penyulangList.forEach(p => select.innerHTML += `<option value="${p.toLowerCase()}">${p}</option>`);
-
+            /* Dropdown Penyulang dihapus sesuai permintaan */
             applyFilters();
         }
 
         function setQuickStatus(val) {
             activeStatus = val;
+            const configs = {
+                all: { color: 'bg-red-600', border: 'border-red-600' },
+                open: { color: 'bg-emerald-500', border: 'border-emerald-500' },
+                progress: { color: 'bg-yellow-500', border: 'border-yellow-500' },
+                closed: { color: 'bg-blue-600', border: 'border-blue-600' }
+            };
+
             document.querySelectorAll('.status-btn').forEach(b => {
-                b.classList.remove('active', 'bg-blue-600', 'text-white', 'border-blue-600');
-                if (b.innerText.toLowerCase() === val || (b.innerText.toLowerCase() === 'semua' && val === 'all')) {
-                    b.classList.add('active', 'bg-blue-600', 'text-white', 'border-blue-600');
+                const bVal = b.getAttribute('onclick').match(/'(.*)'/)[1];
+                b.classList.remove('active', 'bg-blue-600', 'bg-slate-800', 'bg-red-600', 'bg-emerald-500', 'bg-yellow-500', 'text-white', 'border-blue-600', 'border-slate-800', 'border-red-600', 'border-emerald-500', 'border-yellow-500');
+                b.classList.add('bg-white', 'text-slate-500', 'border-slate-100');
+
+                if (bVal === val) {
+                    const c = configs[val];
+                    b.classList.add('active', c.color, 'text-white', c.border);
+                    b.classList.remove('bg-white', 'text-slate-500', 'border-slate-100');
                 }
             });
             applyFilters();
@@ -390,19 +392,18 @@
 
         function applyFilters() {
             const query = document.getElementById('searchInput').value.toLowerCase();
-            const pVal = document.getElementById('filterPenyulang').value;
 
             filteredData = allData.filter(d => {
                 const searchStr = `${d.nokondisi} ${d.namapetugas} ${d.penyulang} ${d.lokasi}`.toLowerCase();
                 const matchSearch = !query || searchStr.includes(query);
-                const matchPenyulang = pVal === 'all' || (d.penyulang || '').toLowerCase() === pVal;
 
                 const s = (d.status || 'OPEN').toLowerCase();
                 const matchStatus = activeStatus === 'all' ||
-                    (activeStatus === 'open' && (s.includes('open') || s.includes('progress'))) ||
+                    (activeStatus === 'open' && s.includes('open')) ||
+                    (activeStatus === 'progress' && s.includes('progress')) ||
                     (activeStatus === 'closed' && (s.includes('close') || s.includes('selesai')));
 
-                return matchSearch && matchPenyulang && matchStatus;
+                return matchSearch && matchStatus;
             });
 
             renderUI();
@@ -413,9 +414,9 @@
             c.innerHTML = '';
             c.classList.remove('hidden');
 
-            document.getElementById('statTotal').innerText = allData.length;
-            document.getElementById('statPenyulang').innerText = new Set(allData.map(d => d.penyulang).filter(Boolean)).size;
-            document.getElementById('dataCount').innerText = `${filteredData.length} Laporan`;
+            if (document.getElementById('statTotal')) document.getElementById('statTotal').innerText = allData.length;
+            if (document.getElementById('statPenyulang')) document.getElementById('statPenyulang').innerText = new Set(allData.map(d => d.penyulang).filter(Boolean)).size;
+            if (document.getElementById('dataCount')) document.getElementById('dataCount').innerText = `${filteredData.length} Laporan`;
 
             if (filteredData.length === 0) {
                 c.innerHTML = '<div class="py-14 text-center text-slate-300 font-bold text-[10px] uppercase tracking-widest">Tidak ada data ditemukan</div>';
@@ -425,11 +426,19 @@
             c.className = "overflow-hidden rounded-3xl border border-slate-100 shadow-sm bg-white divide-y divide-slate-50";
 
             filteredData.forEach((d, i) => {
-                const isClosed = (d.status || '').toLowerCase().includes('close') || (d.status || '').toLowerCase().includes('selesai');
-                const statusText = (d.status || (isClosed ? 'OK' : 'OPEN')).toUpperCase();
-                const statusBadge = isClosed
-                    ? `<span class="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[7px] font-black uppercase bg-blue-50 text-blue-600 border border-blue-100/50 shadow-sm"><span class="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-[0_0_5px_rgba(59,130,246,0.5)]"></span>${statusText}</span>`
-                    : `<span class="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[7px] font-black uppercase bg-emerald-50 text-emerald-600 border border-emerald-100/50 shadow-sm"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.6)]"></span>${statusText}</span>`;
+                const s = (d.status || '').toLowerCase();
+                const isClosed = s.includes('close') || s.includes('selesai');
+                const isProgress = s.includes('progress');
+                const statusText = (d.status || (isClosed ? 'CLOSED' : 'OPEN')).toUpperCase();
+
+                let statusBadge = "";
+                if (isClosed) {
+                    statusBadge = `<span class="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[7px] font-black uppercase bg-blue-50 text-blue-600 border border-blue-100/50 shadow-sm"><span class="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-[0_0_5px_rgba(59,130,246,0.5)]"></span>${statusText}</span>`;
+                } else if (isProgress) {
+                    statusBadge = `<span class="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[7px] font-black uppercase bg-yellow-50 text-yellow-600 border border-yellow-100/50 shadow-sm"><span class="w-1.5 h-1.5 rounded-full bg-yellow-500 animate-pulse shadow-[0_0_8px_rgba(245,158,11,0.6)]"></span>${statusText}</span>`;
+                } else {
+                    statusBadge = `<span class="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[7px] font-black uppercase bg-emerald-50 text-emerald-600 border border-emerald-100/50 shadow-sm"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.6)]"></span>${statusText}</span>`;
+                }
 
                 const row = `
                     <div onclick="showDetail(${i})" class="${i % 2 !== 0 ? 'bg-blue-50/30' : 'bg-white'} px-6 py-4 active:bg-blue-100 flex items-center gap-4 cursor-pointer transition-all">
@@ -669,6 +678,15 @@
             setTimeout(() => {
                 m.classList.replace('flex', 'hidden');
             }, 300);
+        }
+
+        function previewAll() {
+            if (!filteredData || filteredData.length === 0) {
+                alert("Tidak ada data untuk dipreview.");
+                return;
+            }
+            sessionStorage.setItem('recap_data', JSON.stringify(filteredData));
+            window.location.href = 'recap.html';
         }
 
         function closeDetail() {

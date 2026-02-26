@@ -41,14 +41,13 @@
         class="relative flex min-h-screen w-full flex-col overflow-x-hidden max-w-md mx-auto shadow-2xl bg-background-light dark:bg-background-dark">
 
         <!-- Header -->
-        <header class="sticky top-0 z-10 bg-background-light dark:bg-background-dark border-b border-primary/10">
+        <header class="sticky top-0 z-10 bg-primary border-b border-white/10 shadow-lg">
             <div class="flex items-center p-4 pb-2 justify-between">
                 <button onclick="history.back()"
-                    class="text-primary flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-primary/10 transition-colors">
+                    class="text-white flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-white/10 transition-colors">
                     <span class="material-symbols-outlined">arrow_back</span>
                 </button>
-                <h2
-                    class="text-slate-900 dark:text-slate-100 text-sm font-bold uppercase tracking-wider flex-1 text-center px-2">
+                <h2 class="text-white text-sm font-bold uppercase tracking-wider flex-1 text-center px-2">
                     PATROLI MANDOR LINE
                 </h2>
                 <div class="size-10"></div>
@@ -57,11 +56,11 @@
             <!-- Step Indicator -->
             <div class="flex flex-col items-center pb-4">
                 <div class="flex w-full flex-row items-center justify-center gap-3 py-3">
-                    <div class="h-2 w-8 rounded-full bg-primary/30"></div>
-                    <div class="h-2 w-8 rounded-full bg-primary"></div>
-                    <div class="h-2 w-8 rounded-full bg-primary/30"></div>
+                    <div class="h-2 w-8 rounded-full bg-white/30"></div>
+                    <div class="h-2 w-8 rounded-full bg-white"></div>
+                    <div class="h-2 w-8 rounded-full bg-white/30"></div>
                 </div>
-                <p class="text-primary text-xs font-bold uppercase tracking-widest">Step 2: Temuan</p>
+                <p class="text-white text-xs font-bold uppercase tracking-widest">Step 2: Temuan</p>
             </div>
         </header>
 
@@ -102,8 +101,8 @@
                 <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Lokasi Temuan (Nama
                     Jalan/Patokan)</label>
                 <input id="lokasi"
-                    class="w-full rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:border-primary focus:ring-0 h-12 px-4 text-sm transition-all"
-                    type="text" />
+                    class="w-full rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:border-primary focus:ring-0 h-12 px-4 text-sm transition-all uppercase text-primary font-bold"
+                    type="text" oninput="this.value=this.value.toUpperCase()" />
             </div>
 
             <!-- Photo Upload Slots -->
@@ -210,8 +209,8 @@
             <div class="space-y-1.5 pb-24 focus-within:text-primary transition-colors">
                 <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Keterangan Tambahan</label>
                 <textarea id="keterangan"
-                    class="w-full rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:border-primary focus:ring-0 p-4 text-sm resize-none transition-all"
-                    rows="3"></textarea>
+                    class="w-full rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:border-primary focus:ring-0 p-4 text-sm resize-none transition-all uppercase text-primary font-bold"
+                    rows="3" oninput="this.value=this.value.toUpperCase()"></textarea>
             </div>
         </main>
 
