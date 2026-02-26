@@ -41,8 +41,7 @@
     <!-- Header -->
     <header class="sticky top-0 z-50 bg-background-light dark:bg-background-dark border-b border-primary/10 px-4 py-4">
         <div class="flex items-center justify-between max-w-md mx-auto">
-            <button
-                onclick="if(confirm('Keluar dari aplikasi?')){sessionStorage.clear(); window.location.href='index.html';}"
+            <button onclick="showLogoutModal()"
                 class="p-2 -ml-2 text-primary hover:bg-primary/10 rounded-full transition-colors">
                 <span class="material-symbols-outlined">logout</span>
             </button>
@@ -52,6 +51,73 @@
             <div class="w-10"></div>
         </div>
     </header>
+
+    <!-- Premium Logout Modal -->
+    <div id="logoutModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-6">
+        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-fade-in" onclick="hideLogoutModal()">
+        </div>
+        <div class="bg-white dark:bg-slate-900 w-full max-w-xs rounded-[2.5rem] p-8 shadow-2xl relative z-10 scale-90 opacity-0 transition-all duration-300 transform"
+            id="modalContent">
+            <div
+                class="w-16 h-16 bg-red-50 dark:bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <span class="material-symbols-outlined text-red-500 text-3xl">logout</span>
+            </div>
+            <h3 class="text-xl font-black text-center text-slate-900 dark:text-white mb-2">Keluar Aplikasi?</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 text-center leading-relaxed mb-8">Anda akan keluar dari
+                sesi patroli saat ini. Pastikan data sudah tersimpan.</p>
+
+            <div class="flex flex-col gap-3">
+                <button onclick="doLogout()"
+                    class="w-full h-14 bg-red-500 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg shadow-red-200 dark:shadow-none active:scale-95 transition-all">
+                    Ya, Keluar
+                </button>
+                <button onclick="hideLogoutModal()"
+                    class="w-full h-14 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-2xl font-black text-xs uppercase tracking-widest active:scale-95 transition-all">
+                    Batalkan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+
+        #logoutModal.show {
+            display: flex;
+        }
+
+        #logoutModal.show #modalContent {
+            scale: 1;
+            opacity: 1;
+        }
+    </style>
+
+    <script>
+        function showLogoutModal() {
+            const m = document.getElementById('logoutModal');
+            m.classList.add('show');
+        }
+        function hideLogoutModal() {
+            const m = document.getElementById('logoutModal');
+            m.classList.remove('show');
+        }
+        function doLogout() {
+            sessionStorage.clear();
+            window.location.href = 'index.html';
+        }
+    </script>
 
     <main class="max-w-md mx-auto p-4 pb-24">
 
@@ -189,8 +255,8 @@
     </main>
 
     <!-- Footer Button -->
-    <div
-        class="fixed bottom-0 left-0 right-0 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md p-4 border-t border-primary/10">
+    <div class="fixed bottom-0 left-0 right-0 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md p-4 pb-8 border-t border-primary/10 shadow-[0_-10px_30px_rgba(0,0,0,0.05)]"
+        style="padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));">
         <div class="max-w-md mx-auto flex items-center justify-between">
             <!-- Space on left to balance -->
             <div class="w-20"></div>
@@ -204,7 +270,7 @@
 
             <!-- Next Button (Right) -->
             <button id="btnNext" onclick="nextStep()"
-                class="w-20 h-10 bg-primary hover:bg-primary/90 text-white font-bold rounded-xl shadow-lg shadow-primary/30 flex items-center justify-center transition-transform active:scale-95 text-xs uppercase">
+                class="w-24 h-12 bg-primary hover:bg-primary/90 text-white font-bold rounded-2xl shadow-lg shadow-primary/30 flex items-center justify-center transition-transform active:scale-95 text-xs uppercase tracking-widest">
                 <span>Next</span>
             </button>
         </div>
@@ -310,17 +376,6 @@
                         }
                     }
                 });
-
-                // Debug Helper & Force Alert
-                let cCount = 0;
-                const h3El = document.querySelector('h3') || document.body;
-                h3El.onclick = () => {
-                    cCount++;
-                    if (cCount >= 5) {
-                        alert(`DEBUG:\nTotal: ${list.length}\nToday: ${foundToday}\nLast: ${maxSeq}\nPre: ${todayPrefix}`);
-                        cCount = 0;
-                    }
-                };
 
                 const finalNo = `${todayPrefix}.${String(maxSeq + 1).padStart(3, '0')}`;
                 if (foundToday > 0) {

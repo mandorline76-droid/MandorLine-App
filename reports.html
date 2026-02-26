@@ -120,8 +120,8 @@
         </section>
 
         <!-- Bottom Navigation -->
-        <nav
-            class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white/95 backdrop-blur-xl border-t border-slate-100 p-4 px-12 flex justify-between items-center z-40 rounded-t-[2.5rem] shadow-xl">
+        <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white/95 backdrop-blur-xl border-t border-slate-100 p-4 pb-10 px-12 flex justify-between items-center z-40 rounded-t-[2.5rem] shadow-xl"
+            style="padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));">
             <button onclick="window.location.href='patroli-step1.html'"
                 class="flex flex-col items-center gap-1.5 text-slate-300 active:scale-95">
                 <span class="material-symbols-outlined text-2xl">add_circle</span>
@@ -131,13 +131,36 @@
                 <span class="material-symbols-outlined text-2xl">assignment</span>
                 <span class="text-[8px] font-black uppercase tracking-widest">History</span>
             </button>
-            <button onclick="if(confirm('Keluar?')) window.location.href='index.html'"
+            <button onclick="showLogoutModal()"
                 class="flex flex-col items-center gap-1.5 text-slate-300 active:scale-95">
                 <span class="material-symbols-outlined text-2xl">logout</span>
                 <span class="text-[8px] font-black uppercase tracking-widest">Keluar</span>
             </button>
         </nav>
     </div>
+
+    <!-- Premium Logout Modal -->
+    <div id="logoutModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-6">
+        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-fade-in" onclick="hideLogoutModal()">
+        </div>
+        <div class="bg-white w-full max-w-xs rounded-[2.5rem] p-8 shadow-2xl relative z-10 scale-90 opacity-0 transition-all duration-300 transform"
+            id="logoutModalContent">
+            <div class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                <span class="material-symbols-outlined text-red-500 text-3xl">logout</span>
+            </div>
+            <h3 class="text-xl font-black text-center text-slate-900 mb-2">Keluar Aplikasi?</h3>
+            <p class="text-xs text-slate-500 text-center leading-relaxed mb-8">Anda akan diarahkan kembali ke halaman
+                login.</p>
+            <div class="flex flex-col gap-3">
+                <button onclick="window.location.href='index.html'"
+                    class="w-full h-14 bg-red-500 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg shadow-red-200 active:scale-95 transition-all">Ya,
+                    Keluar</button>
+                <button onclick="hideLogoutModal()"
+                    class="w-full h-14 bg-slate-50 text-slate-600 rounded-2xl font-black text-xs uppercase tracking-widest active:scale-95 transition-all">Batalkan</button>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Detail Swipe-up -->
     <div id="detailView"
@@ -148,15 +171,39 @@
                 <div>
                     <p class="text-[10px] font-black text-blue-600 uppercase tracking-widest" id="detNoKondisi">HAR-XXXX
                     </p>
-                    <h2 class="text-xl font-black text-slate-800">Detail Laporan</h2>
+                    <h2 class="text-2xl font-black text-slate-900 mt-1">Detail Laporan</h2>
                 </div>
                 <button onclick="closeDetail()"
-                    class="w-10 h-10 bg-slate-50 rounded-full flex items-center justify-center text-slate-400">
+                    class="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 active:scale-90 transition-all">
                     <span class="material-symbols-outlined">close</span>
                 </button>
             </div>
-            <div id="detContent" class="space-y-8 pb-32"></div>
+            <div id="detContent" class="space-y-6 pb-12">
+                <!-- Details injected here -->
+            </div>
         </div>
+    </div>
+
+    <!-- Photo Zoom Modal (Jurus Zoom In) -->
+    <div id="photoZoomModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4">
+        <div class="absolute inset-0 bg-slate-900/95 backdrop-blur-md animate-fade-in" onclick="closeZoom()"></div>
+        <div class="relative w-full max-w-md scale-90 opacity-0 transition-all duration-300 transform" id="zoomContent">
+            <img id="zoomedImg" src="" class="w-full h-auto rounded-[2rem] shadow-2xl border-4 border-white/10">
+            <button onclick="closeZoom()"
+                class="absolute -top-4 -right-4 w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-xl active:scale-90 text-slate-900">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+    </div>
+    <h2 class="text-xl font-black text-slate-800">Detail Laporan</h2>
+    </div>
+    <button onclick="closeDetail()"
+        class="w-10 h-10 bg-slate-50 rounded-full flex items-center justify-center text-slate-400">
+        <span class="material-symbols-outlined">close</span>
+    </button>
+    </div>
+    <div id="detContent" class="space-y-8 pb-32"></div>
+    </div>
     </div>
 
     <script>
@@ -473,7 +520,7 @@
             }
 
             return `
-                <div class="relative aspect-square rounded-[2.5rem] overflow-hidden shadow-sm border border-slate-100 transition-all hover:shadow-md">
+                <div class="relative aspect-square rounded-[2.5rem] overflow-hidden shadow-sm border border-slate-100 transition-all hover:shadow-md cursor-zoom-in" onclick="zoomPhoto('${proxyUrl}')">
                     <img src="${proxyUrl}" 
                          referrerpolicy="no-referrer" 
                          crossorigin="anonymous"
@@ -483,9 +530,58 @@
                     <div class="absolute bottom-3 left-3 right-3 bg-white/90 backdrop-blur-md px-3 py-2 rounded-2xl text-[8px] font-black uppercase text-center text-slate-600 border border-slate-100">
                         ${l}
                     </div>
-                    <a href="${u}" target="_blank" referrerpolicy="no-referrer" class="absolute inset-0"></a>
                 </div>
             `;
+        }
+
+        /* ── Jurus Zoom Photo ── */
+        function zoomPhoto(url) {
+            const m = document.getElementById('photoZoomModal');
+            const img = document.getElementById('zoomedImg');
+            const cont = document.getElementById('zoomContent');
+
+            img.src = url;
+            m.classList.remove('hidden');
+            m.classList.add('flex');
+
+            setTimeout(() => {
+                cont.classList.add('scale-100', 'opacity-100');
+                cont.classList.remove('scale-90', 'opacity-0');
+            }, 10);
+        }
+
+        function closeZoom() {
+            const m = document.getElementById('photoZoomModal');
+            const cont = document.getElementById('zoomContent');
+
+            cont.classList.replace('scale-100', 'scale-90');
+            cont.classList.replace('opacity-100', 'opacity-0');
+
+            setTimeout(() => {
+                m.classList.replace('flex', 'hidden');
+            }, 300);
+        }
+
+        /* ── Jurus Logout Modal ── */
+        function showLogoutModal() {
+            const m = document.getElementById('logoutModal');
+            const c = document.getElementById('logoutModalContent');
+            m.classList.remove('hidden');
+            m.classList.add('flex');
+            setTimeout(() => {
+                c.classList.add('scale-100', 'opacity-100');
+                c.classList.remove('scale-90', 'opacity-0');
+            }, 10);
+        }
+
+        function hideLogoutModal() {
+            const m = document.getElementById('logoutModal');
+            const c = document.getElementById('logoutModalContent');
+            c.classList.replace('scale-100', 'scale-90');
+            c.classList.replace('opacity-100', 'opacity-0');
+            setTimeout(() => {
+                m.classList.replace('flex', 'hidden');
+            }, 300);
         }
 
         function closeDetail() {

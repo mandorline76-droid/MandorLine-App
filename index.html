@@ -7,10 +7,10 @@
     <title>MANDORLINE – Login</title>
     <!-- PWA SETTINGS -->
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#2563eb">
+    <meta name="theme-color" content="#1565C0">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3209/3209674.png">
+    <link rel="apple-touch-icon" href="logo.png">
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet" />
@@ -104,6 +104,43 @@
                 opacity: 1;
                 transform: translateY(0);
             }
+        }
+
+        /* ── Splash Screen (Jurus Pembuka) ── */
+        #splashScreen {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: linear-gradient(180deg, #1565C0 0%, #0d4a96 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        .splash-icon {
+            width: 120px;
+            height: 120px;
+            animation: iconEnlarge 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.2));
+        }
+
+        @keyframes iconEnlarge {
+            0% {
+                scale: 0.5;
+                opacity: 0;
+            }
+
+            100% {
+                scale: 1.2;
+                opacity: 1;
+            }
+        }
+
+        .splash-fade-out {
+            opacity: 0;
+            pointer-events: none;
+            scale: 1.1;
         }
 
         /* ── Icon ── */
@@ -419,6 +456,11 @@
 
 <body>
 
+    <!-- Splash Screen Premium -->
+    <div id="splashScreen">
+        <img src="logo.png" class="splash-icon">
+    </div>
+
     <!-- Background -->
     <div class="bg">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 860" preserveAspectRatio="xMidYMax slice"
@@ -504,13 +546,8 @@
         <div class="card">
 
             <!-- Icon -->
-            <div class="icon-wrap">
-                <!-- Lightning bolt SVG -->
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="12" cy="12" r="12" fill="#F3F6FF" />
-                    <path d="M13.5 3L5.5 13.5H12L10.5 21L18.5 10.5H12L13.5 3Z" fill="#F9A825" stroke="#F57F17"
-                        stroke-width="0.5" stroke-linejoin="round" />
-                </svg>
+            <div class="icon-wrap overflow-hidden ring-4 ring-blue-50">
+                <img src="logo.png" class="w-full h-full object-contain">
             </div>
 
             <!-- Title -->
@@ -645,6 +682,15 @@
         }
 
         btnLogin.addEventListener('click', doLogin);
+
+        /* ── Splash Logic ── */
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const sp = document.getElementById('splashScreen');
+                sp.classList.add('splash-fade-out');
+                setTimeout(() => sp.style.display = 'none', 600);
+            }, 2000); // Tampil selama 2 detik
+        });
         ['username', 'password'].forEach(id =>
             document.getElementById(id).addEventListener('keydown', e => {
                 if (e.key === 'Enter') doLogin();

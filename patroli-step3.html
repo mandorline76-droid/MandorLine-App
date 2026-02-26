@@ -201,21 +201,22 @@
 
         <!-- Navigation Buttons -->
         <footer
-            class="fixed bottom-0 left-0 right-0 z-40 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md p-4 border-t border-primary/10 flex justify-center">
-            <div class="w-full max-w-md flex flex-col items-center gap-2">
-                <div class="w-full flex items-center justify-between gap-3">
+            class="fixed bottom-0 left-0 right-0 z-40 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md p-6 pb-10 border-t border-primary/10 shadow-[0_-10px_30px_rgba(0,0,0,0.05)] flex justify-center"
+            style="padding-bottom: calc(2rem + env(safe-area-inset-bottom, 0px));">
+            <div class="w-full max-w-md flex flex-col items-center gap-4">
+                <div class="w-full flex items-center justify-between gap-4">
                     <button onclick="history.back()"
-                        class="w-32 h-12 rounded-xl border-2 border-primary text-primary font-bold hover:bg-primary/5 transition-all active:scale-95 uppercase text-xs tracking-widest">
+                        class="flex-1 h-14 rounded-2xl border-2 border-primary text-primary font-black hover:bg-primary/5 transition-all active:scale-95 uppercase text-[10px] tracking-widest">
                         Kembali
                     </button>
                     <button id="btnSubmit" onclick="submitReport()"
-                        class="w-32 h-12 rounded-xl bg-primary text-white font-bold shadow-lg shadow-primary/30 hover:bg-primary/90 transition-all active:scale-95 uppercase text-xs tracking-widest flex items-center justify-center gap-2">
+                        class="flex-1 h-14 rounded-2xl bg-primary text-white font-black shadow-lg shadow-primary/30 hover:bg-primary/90 transition-all active:scale-95 uppercase text-[10px] tracking-widest flex items-center justify-center gap-2">
                         <span>Kirim</span>
                         <span class="material-symbols-outlined text-sm">send</span>
                     </button>
                 </div>
-                <p class="text-[9px] text-slate-400 uppercase font-bold tracking-widest">Pastikan data sudah benar
-                    sebelum mengirim</p>
+                <p class="text-[9px] text-slate-400 uppercase font-black tracking-[0.2em] opacity-60">Finalisasi data &
+                    kirim laporan</p>
             </div>
         </footer>
     </div>
