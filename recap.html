@@ -87,7 +87,7 @@
             </div>
             <div class="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100 text-center">
                 <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Status Open</p>
-                <p class="text-3xl font-black text-emerald-500" id="statOpen">0</p>
+                <p class="text-3xl font-black text-sky-500" id="statOpen">0</p>
             </div>
             <div class="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100 text-center">
                 <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Status Selesai</p>
@@ -156,7 +156,7 @@
                 const isClosed = (item.status || '').toLowerCase().includes('close') || (item.status || '').toLowerCase().includes('selesai');
                 const isProgress = (item.status || '').toLowerCase().includes('progress');
 
-                let statusClass = "bg-emerald-50 text-emerald-600 border-emerald-100";
+                let statusClass = "bg-sky-50 text-sky-600 border-sky-100";
                 if (isClosed) statusClass = "bg-blue-50 text-blue-600 border-blue-100";
                 if (isProgress) statusClass = "bg-yellow-50 text-yellow-600 border-yellow-100";
 
