@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MandorLine – Tindak Lanjut</title>
+    <meta name="description" content="Form input tindak lanjut temuan">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="app-shell">
+        <!-- Top Bar -->
+        <header class="topbar">
+            <button class="topbar-back" onclick="history.back()">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path d="M19 12H5M12 5l-7 7 7 7" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </button>
+            <span class="topbar-title">Tindak Lanjut</span>
+            <div style="width:36px"></div>
+        </header>
+
+        <!-- Main -->
+        <main class="main-content">
+
+            <!-- Pilih Temuan -->
+            <div class="form-group">
+                <label class="form-label" for="pilihTemuan">Pilih Temuan <span class="required">*</span></label>
+                <select id="pilihTemuan" class="form-control" onchange="onTemuanSelected()">
+                    <option value="">-- Pilih Temuan --</option>
+                </select>
+            </div>
+
+            <!-- Info Temuan (readonly summary) -->
+            <div id="infoTemuan" class="card mb-12" style="display:none">
+                <div class="card-header">Informasi Temuan</div>
+                <div class="card-body" style="padding:12px">
+                    <div class="info-row">
+                        <span class="info-label">No. Kondisi</span>
+                        <span class="info-value" id="infoNoKondisi">—</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Jenis Temuan</span>
+                        <span class="info-value" id="infoJenis">—</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Penyulang</span>
+                        <span class="info-value" id="infoPenyulang">—</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Lokasi</span>
+                        <span class="info-value" id="infoLokasi">—</span>
+                    </div>
+                    <div class="info-row" style="border:none">
+                        <span class="info-label">Tanggal Patroli</span>
+                        <span class="info-value" id="infoTanggal">—</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Tindak Lanjut -->
+            <div id="formTL" style="display:none">
+
+                <!-- Prioritas -->
+                <div class="form-group">
+                    <label class="form-label" for="prioritas">Prioritas Tindak Lanjut <span
+                            class="required">*</span></label>
+                    <select id="prioritas" class="form-control">
+                        <option value="">-- Pilih Prioritas --</option>
+                        <option value="1">Prioritas 1</option>
+                        <option value="2">Prioritas 2</option>
+                        <option value="3">Prioritas 3</option>
+                    </select>
+                </div>
+
+                <!-- Tanggal TL (manual) -->
+                <div class="form-group">
+                    <label class="form-label" for="tanggalTL">Tanggal Tindak Lanjut <span
+                            class="required">*</span></label>
+                    <input type="date" id="tanggalTL" class="form-control">
+                </div>
+
+                <!-- Foto TL -->
+                <div class="form-group">
+                    <label class="form-label">Foto Tindak Lanjut</label>
+                    <div class="photo-grid">
+                        <div class="photo-box">
+                            <input type="file" id="fotoTL1" accept="image/*" capture="environment"
+                                onchange="previewPhoto(this,'prevTL1')">
+                            <img class="photo-preview" id="prevTL1" src="" alt="Foto TL 1">
+                            <div class="photo-placeholder">
+                                <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5"
+                                    viewBox="0 0 24 24">
+                                    <path
+                                        d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" />
+                                    <circle cx="12" cy="13" r="4" />
+                                </svg>
+                                Foto TL 1
+                            </div>
+                        </div>
+                        <div class="photo-box">
+                            <input type="file" id="fotoTL2" accept="image/*" capture="environment"
+                                onchange="previewPhoto(this,'prevTL2')">
+                            <img class="photo-preview" id="prevTL2" src="" alt="Foto TL 2">
+                            <div class="photo-placeholder">
+                                <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5"
+                                    viewBox="0 0 24 24">
+                                    <path
+                                        d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" />
+                                    <circle cx="12" cy="13" r="4" />
+                                </svg>
+                                Foto TL 2
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nama Petugas TL -->
+                <div class="form-group">
+                    <label class="form-label" for="namaPetugasTL">Nama Petugas TL <span
+                            class="required">*</span></label>
+                    <input type="text" id="namaPetugasTL" class="form-control uppercase" autocapitalize="characters"
+                        oninput="toUpperCase(this)">
+                </div>
+
+                <!-- Status -->
+                <div class="form-group">
+                    <label class="form-label" for="statusTL">Status <span class="required">*</span></label>
+                    <select id="statusTL" class="form-control">
+                        <option value="">-- Pilih Status --</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Closed">Closed / Selesai</option>
+                    </select>
+                </div>
+
+                <!-- Submit -->
+                <button class="btn btn-primary mt-16" id="btnSimpanTL" onclick="simpanTL()">
+                    SIMPAN TINDAK LANJUT
+                </button>
+                <div style="height:8px"></div>
+            </div>
+
+        </main>
+
+        <!-- Bottom Nav -->
+        <nav class="bottom-nav">
+            <a class="nav-item" href="dashboard.html">
+                <svg fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+                </svg>
+                <span>Home</span>
+            </a>
+            <a class="nav-item" href="input-temuan.html">
+                <svg fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                </svg>
+                <span>Tambah</span>
+            </a>
+            <a class="nav-item" href="list-temuan.html">
+                <svg fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z" />
+                </svg>
+                <span>List</span>
+            </a>
+        </nav>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script src="js/api.js"></script>
+    <script src="js/tindak-lanjut.js"></script>
+</body>
+
+</html>

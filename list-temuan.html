@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MandorLine – List Temuan</title>
+    <meta name="description" content="Daftar riwayat temuan patroli jaringan">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="app-shell">
+        <!-- Top Bar -->
+        <header class="topbar">
+            <button class="topbar-back" onclick="history.back()">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path d="M19 12H5M12 5l-7 7 7 7" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </button>
+            <span class="topbar-title">List Temuan</span>
+            <div style="width:36px"></div>
+        </header>
+
+        <!-- Main -->
+        <main class="main-content">
+
+            <!-- Filter Bar -->
+            <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">
+                <div style="display:flex;gap:8px;">
+                    <input type="date" id="filterTanggal" class="form-control" style="flex:1" onchange="loadTemuan()">
+                    <select id="filterPenyulang" class="form-control" style="flex:1" onchange="loadTemuan()">
+                        <option value="">Semua Penyulang</option>
+                        <option>BTJR</option>
+                        <option>CKLW</option>
+                        <option>CKRH</option>
+                        <option>GLNG</option>
+                        <option>LBSR</option>
+                        <option>MWTI</option>
+                        <option>PGP</option>
+                        <option>PSLU</option>
+                        <option>PRBY</option>
+                        <option>PTB</option>
+                        <option>RJDL</option>
+                        <option>SLCU</option>
+                    </select>
+                </div>
+                <div style="display:flex;gap:8px;">
+                    <select id="filterStatus" class="form-control" style="flex:1" onchange="loadTemuan()">
+                        <option value="">Semua Status</option>
+                        <option value="notl">Belum TL</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Closed">Selesai</option>
+                    </select>
+                    <button onclick="cetakSemua()" class="btn btn-primary"
+                        style="flex:1; padding:10px; font-size:12px; height:auto;">
+                        🖨️ CETAK REKAP
+                    </button>
+                </div>
+            </div>
+
+            <!-- List -->
+            <div class="temuan-list" id="temuanList">
+                <div class="empty-state">
+                    <div class="spinner" style="border-color:var(--border);border-top-color:var(--abu-tua)"></div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Bottom Nav -->
+        <nav class="bottom-nav">
+            <a class="nav-item" href="dashboard.html">
+                <svg fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+                </svg>
+                <span>Home</span>
+            </a>
+            <a class="nav-item" href="input-temuan.html">
+                <svg fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                </svg>
+                <span>Tambah</span>
+            </a>
+            <a class="nav-item active" href="list-temuan.html">
+                <svg fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z" />
+                </svg>
+                <span>List</span>
+            </a>
+        </nav>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script src="js/api.js"></script>
+    <script src="js/list-temuan.js"></script>
+</body>
+
+</html>

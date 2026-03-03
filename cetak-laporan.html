@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Laporan Temuan MandorLine</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 10px;
+      color: #111;
+      background: #f7f7f7;
+    }
+
+    .print-page {
+      background: #fff;
+      max-width: 794px;
+      /* A4 width roughly */
+      margin: 0 auto;
+      padding: 20px 30px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      box-sizing: border-box;
+    }
+
+    .header {
+      border-bottom: 2px solid #000;
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 18px;
+      text-transform: uppercase;
+    }
+
+    .header p {
+      margin: 2px 0 0;
+      color: #444;
+      font-size: 11px;
+    }
+
+    .section-title {
+      font-size: 12px;
+      font-weight: 700;
+      background: #000;
+      color: #fff;
+      padding: 4px 8px;
+      margin: 0 0 8px 0;
+      text-transform: uppercase;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 12px;
+      font-size: 11px;
+    }
+
+    th,
+    td {
+      border: 1px solid #aaa;
+      padding: 4px 6px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #eee;
+      width: 22%;
+      font-weight: 600;
+    }
+
+    .photo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
+      break-inside: avoid;
+    }
+
+    .photo-box {
+      border: 1px solid #aaa;
+      padding: 4px;
+      text-align: center;
+      background: #fafafa;
+    }
+
+    .photo-box img {
+      width: 100%;
+      height: 160px;
+      /* Shortened to fit 1 page */
+      object-fit: contain;
+      margin-bottom: 4px;
+      background: #eee;
+    }
+
+    .photo-title {
+      font-weight: 600;
+      font-size: 10px;
+      color: #333;
+    }
+
+    .no-print {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    .btn-print {
+      padding: 8px 16px;
+      background: #1E88E5;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      font-family: 'Inter';
+      font-size: 13px;
+    }
+
+    @media print {
+      @page {
+        size: A4 portrait;
+        margin: 1cm;
+      }
+
+      body {
+        background: #fff;
+        padding: 0;
+      }
+
+      .print-page {
+        box-shadow: none;
+        max-width: 100%;
+        padding: 0;
+        margin: 0;
+      }
+
+      .no-print {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="no-print">
+    <button class="btn-print" onclick="window.print()">🖨️ Cetak / Simpan PDF</button>
+  </div>
+
+  <div class="print-page" id="reportContent">
+    <div style="text-align:center; padding: 20px; color: #888; font-size:12px">Memuat data laporan...</div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+      if (!id) return alert('ID Temuan tidak ditemukan');
+
+      try {
+        const res = await apiFetch('/temuan/' + id);
+        if (!res.success) throw new Error(res.message);
+        const t = res.data;
+        const tl = t.tindak_lanjut || {};
+
+        const html = `
+          <div class="header">
+            <h1>LAPORAN PATROLI JARINGAN</h1>
+            <p>Sistem Informasi MandorLine</p>
+          </div>
+
+          <div class="section-title">1. DATA TEMUAN KONDISI</div>
+          <table>
+            <tr>
+              <th>No. Kondisi</th><td><strong>${t.no_kondisi}</strong></td>
+              <th>Tanggal Patroli</th><td>${formatDateTime(t.tanggal_patroli)}</td>
+            </tr>
+            <tr>
+              <th>Nama Petugas</th><td>${t.nama_petugas}</td>
+              <th>Penyulang / Segmen</th><td>${t.penyulang} / ${t.segmen}</td>
+            </tr>
+            <tr>
+              <th>Lokasi Temuan</th><td>${t.lokasi_temuan}</td>
+              <th>Kondisi Cuaca</th><td>${t.kondisi_cuaca}</td>
+            </tr>
+            <tr>
+              <th>Titik Koordinat</th><td>${t.titik_koordinat || '-'}</td>
+              <th>Jenis Temuan</th><td style="color:#d32f2f; font-weight:bold;">${t.jenis_temuan}</td>
+            </tr>
+            <tr>
+              <th>Keterangan</th><td colspan="3">${t.keterangan || '-'}</td>
+            </tr>
+          </table>
+
+          <div class="photo-grid">
+            <div class="photo-box">
+              ${t.foto_temuan_1 ? `<img src="${API_URL}/uploads/${t.foto_temuan_1}">` : '<div style="height:160px;display:flex;align-items:center;justify-content:center;color:#999;border:1px dashed #ccc;">Tidak ada foto</div>'}
+              <div class="photo-title">Foto Temuan 1</div>
+            </div>
+            <div class="photo-box">
+              ${t.foto_temuan_2 ? `<img src="${API_URL}/uploads/${t.foto_temuan_2}">` : '<div style="height:160px;display:flex;align-items:center;justify-content:center;color:#999;border:1px dashed #ccc;">Tidak ada foto</div>'}
+              <div class="photo-title">Foto Temuan 2</div>
+            </div>
+          </div>
+
+          <div class="section-title">2. TINDAK LANJUT</div>
+          ${!tl.id ? '<p style="text-align:center; padding:10px; border:1px solid #ccc; font-size:11px; color:#d32f2f;">Belum ada tindak lanjut untuk temuan ini.</p>' : `
+          <table>
+            <tr>
+              <th>Status</th><td><strong>${tl.status}</strong></td>
+              <th>Tanggal TL</th><td>${formatDateTime(tl.tanggal_tl)}</td>
+            </tr>
+            <tr>
+              <th>Prioritas</th><td>Prioritas ${tl.prioritas}</td>
+              <th>Petugas Eksekutor</th><td>${tl.nama_petugas_tl}</td>
+            </tr>
+          </table>
+
+          <div class="photo-grid">
+            <div class="photo-box">
+              ${tl.foto_tl_1 ? `<img src="${API_URL}/uploads/${tl.foto_tl_1}">` : '<div style="height:160px;display:flex;align-items:center;justify-content:center;color:#999;border:1px dashed #ccc;">Tidak ada foto</div>'}
+              <div class="photo-title">Foto Tindak Lanjut 1</div>
+            </div>
+            <div class="photo-box">
+              ${tl.foto_tl_2 ? `<img src="${API_URL}/uploads/${tl.foto_tl_2}">` : '<div style="height:160px;display:flex;align-items:center;justify-content:center;color:#999;border:1px dashed #ccc;">Tidak ada foto</div>'}
+              <div class="photo-title">Foto Tindak Lanjut 2</div>
+            </div>
+          </div>
+          `}
+        `;
+
+        document.getElementById('reportContent').innerHTML = html;
+        setTimeout(() => { window.print(); }, 2000);
+      } catch (err) {
+        document.getElementById('reportContent').innerHTML = `<p style="color:red;text-align:center;">Gagal memuat laporan: ${err.message}</p>`;
+      }
+    });
+  </script>
+</body>
+
+</html>

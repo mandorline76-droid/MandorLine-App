@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Laporan Rekap Temuan MandorLine</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 10px;
+            color: #111;
+            background: #f7f7f7;
+        }
+
+        .print-page {
+            background: #fff;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+            min-height: 100vh;
+        }
+
+        .header {
+            border-bottom: 2px solid #000;
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 20px;
+            text-transform: uppercase;
+        }
+
+        .header p {
+            margin: 4px 0 0;
+            color: #444;
+            font-size: 12px;
+        }
+
+        .filter-info {
+            margin-top: 5px;
+            font-weight: bold;
+            font-size: 13px;
+            color: #d32f2f;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 11px;
+        }
+
+        th,
+        td {
+            border: 1px solid #aaa;
+            padding: 6px 8px;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        th {
+            background: #eee;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .badge-open {
+            background: #e53935;
+        }
+
+        .badge-progress {
+            background: #fb8c00;
+        }
+
+        .badge-closed {
+            background: #43a047;
+        }
+
+        .badge-notl {
+            background: #757575;
+        }
+
+        .img-thumb {
+            width: 48px;
+            height: 48px;
+            object-fit: cover;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .img-container {
+            display: flex;
+            gap: 4px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .no-print {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .btn-print {
+            padding: 8px 16px;
+            background: #1E88E5;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-family: 'Inter';
+            font-size: 13px;
+        }
+
+        @media print {
+            @page {
+                size: A4 landscape;
+                margin: 1cm;
+            }
+
+            body {
+                background: #fff;
+                padding: 0;
+            }
+
+            .print-page {
+                box-shadow: none;
+                max-width: 100%;
+                padding: 0;
+                margin: 0;
+            }
+
+            .no-print {
+                display: none;
+            }
+
+            table {
+                page-break-inside: auto;
+            }
+
+            tr {
+                page-break-inside: avoid;
+                page-break-after: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="no-print">
+        <button class="btn-print" onclick="window.print()">🖨️ Cetak / Simpan PDF (Landscape)</button>
+        <button class="btn-print" style="background:#555; margin-left:10px" onclick="window.close()">Tutup</button>
+    </div>
+
+    <div class="print-page">
+        <div class="header">
+            <h1>REKAPITULASI TEMUAN PATROLI JARINGAN</h1>
+            <p>Sistem Informasi MandorLine</p>
+            <div class="filter-info" id="filterText">Memuat filter...</div>
+        </div>
+
+        <div id="reportContent">
+            <div style="text-align:center; padding: 40px; color: #888; font-size:14px">Memuat data rekapitulasi...</div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const params = new URLSearchParams(window.location.search);
+            const penyulang = params.get('penyulang') || '';
+            const statusFilters = params.get('status') || '';
+            const tanggal = params.get('tanggal') || '';
+
+            // Format Teks Filter
+            const fText = [];
+            if (tanggal) fText.push(`Tanggal: ${formatDate(tanggal)}`);
+            if (penyulang) fText.push(`Penyulang: ${penyulang}`);
+            if (statusFilters) fText.push(`Status: ${statusFilters === 'notl' ? 'Belum TL' : statusFilters}`);
+
+            document.getElementById('filterText').textContent = fText.length > 0 ? `Filter -> ${fText.join(' | ')}` : 'Semua Data Temuan';
+
+            try {
+                const res = await apiFetch('/temuan');
+                if (!res.success) throw new Error(res.message);
+                let data = res.data;
+
+                // Apply filters exactly like in list-temuan.js
+                data = data.filter(t => {
+                    let matchPenyulang = !penyulang || t.penyulang === penyulang;
+                    let matchStatus = true;
+                    if (statusFilters === 'notl') matchStatus = !t.status;
+                    else if (statusFilters) matchStatus = t.status === statusFilters;
+
+                    let matchTanggal = true;
+                    if (tanggal && t.tanggal_patroli) {
+                        const tgl = t.tanggal_patroli.split('T')[0];
+                        matchTanggal = tgl === tanggal;
+                    }
+                    return matchPenyulang && matchStatus && matchTanggal;
+                });
+
+                if (data.length === 0) {
+                    document.getElementById('reportContent').innerHTML = '<p style="text-align:center; padding:20px;">Tidak ada data yang sesuai dengan filter.</p>';
+                    return;
+                }
+
+                const getBadgeHTML = (s) => {
+                    if (!s) return '<span class="status-badge badge-notl">Belum TL</span>';
+                    if (s === 'Open') return '<span class="status-badge badge-open">Open</span>';
+                    if (s === 'In Progress') return '<span class="status-badge badge-progress">Progress</span>';
+                    if (s === 'Closed') return '<span class="status-badge badge-closed">Selesai</span>';
+                    return `<span class="status-badge badge-notl">${s}</span>`;
+                };
+
+                const rows = data.map((t, index) => {
+                    const imgT1 = t.foto_temuan_1 ? `<img src="${API_URL}/uploads/${t.foto_temuan_1}" class="img-thumb">` : '';
+                    const imgT2 = t.foto_temuan_2 ? `<img src="${API_URL}/uploads/${t.foto_temuan_2}" class="img-thumb">` : '';
+
+                    const imgTL1 = t.foto_tl_1 ? `<img src="${API_URL}/uploads/${t.foto_tl_1}" class="img-thumb">` : '';
+                    const imgTL2 = t.foto_tl_2 ? `<img src="${API_URL}/uploads/${t.foto_tl_2}" class="img-thumb">` : '';
+
+                    const cellT = (imgT1 || imgT2) ? `<div class="img-container">${imgT1}${imgT2}</div>` : '-';
+                    const cellTL = (imgTL1 || imgTL2) ? `<div class="img-container">${imgTL1}${imgTL2}</div>` : '-';
+
+                    return `
+             <tr>
+               <td style="text-align:center">${index + 1}</td>
+               <td>
+                 <strong>${t.no_kondisi}</strong><br>
+                 <span style="color:#666;font-size:10px">${formatDateTime(t.tanggal_patroli)}</span>
+               </td>
+               <td>${t.penyulang} / ${t.segmen}<br><span style="color:#d32f2f;font-weight:bold">${t.jenis_temuan}</span></td>
+               <td>${t.lokasi_temuan}</td>
+               <td>${t.nama_petugas}</td>
+               <td style="text-align:center">${cellT}</td>
+               <td style="text-align:center">${getBadgeHTML(t.status)}</td>
+               <td style="text-align:center">${t.tanggal_tl ? `<strong>${formatDate(t.tanggal_tl)}</strong>` : '-'}</td>
+               <td>${t.nama_petugas_tl || '-'}</td>
+               <td style="text-align:center">${cellTL}</td>
+             </tr>
+           `;
+                }).join('');
+
+                const tableHTML = `
+          <table>
+            <thead>
+              <tr>
+                <th width="3%">No</th>
+                <th width="12%">No Kondisi & Waktu</th>
+                <th width="18%">Penyulang / Jenis Temuan</th>
+                <th width="12%">Lokasi</th>
+                <th width="8%">Pelapor</th>
+                <th width="12%">Foto Temuan</th>
+                <th width="7%">Status</th>
+                <th width="10%">Tgl TL</th>
+                <th width="8%">Petugas TL</th>
+                <th width="12%">Foto TL</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rows}
+            </tbody>
+          </table>
+          <p style="font-size:10px; color:#666; text-align:right">Total Data: <strong>${data.length}</strong> temuan</p>
+        `;
+
+                document.getElementById('reportContent').innerHTML = tableHTML;
+
+                // Auto print setelah dirender, beri waktu 2 detik agar foto loading
+                setTimeout(() => { window.print(); }, 2000);
+
+            } catch (err) {
+                document.getElementById('reportContent').innerHTML = `<p style="color:red;text-align:center;">Gagal memuat rekap: ${err.message}</p>`;
+            }
+        });
+    </script>
+</body>
+
+</html>
